@@ -1,39 +1,230 @@
-<div style="font-family: Arial, sans-serif; color: #333; padding: 10px;">
-  <h1 style="color: #4CAF50;">🚀 Odoo Setup Assistant</h1>
-  
-  <p>
-    <strong>Odoo Setup Assistant</strong> is a powerful developer tool designed to streamline the setup and configuration of Odoo environments.
-    Whether you're launching a fresh Odoo instance or automating your development flow, this module saves you hours of manual setup.
-  </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odoo Setup Assistant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.8em;
+            color: #2c3e50; /* Darker, more professional blue */
+            margin-bottom: 10px;
+        }
+        .header .module-emoji {
+            font-size: 3em;
+        }
+        .header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            font-size: 1.8em;
+            color: #3498db; /* A vibrant blue */
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background-color: #ecf0f1; /* Light grey background for cards */
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db; /* Accent border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+        }
+        .feature-card h3 {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .feature-card h3 .emoji {
+            margin-right: 10px;
+        }
+        .feature-card p {
+            font-size: 0.95em;
+            color: #34495e; /* Darker text for readability */
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li {
+            background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M4.5%209L1.5%206L2.205%205.295L4.5%207.59L9.795%202.295L10.5%203L4.5%209Z%22%20fill%3D%22%233498db%22/%3E%3C/svg%3E') no-repeat left center;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        .code {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+        }
+        .footer p {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .whatsapp-button:hover {
+            background-color: #1DA851;
+        }
+        .whatsapp-button img { /* Basic styling for a WhatsApp icon if you add one */
+            width: 20px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="module-emoji">🛠️</div>
+            <h1>Odoo Setup Assistant</h1>
+            <p>Your comprehensive diagnostic and configuration toolkit for Odoo environments.</p>
+        </div>
 
-  <h2 style="color: #4CAF50;">✨ Key Features</h2>
-  <ul>
-    <li>⚙️ One-click environment initialization</li>
-    <li>📦 Pre-configured settings and data templates</li>
-    <li>🧩 Works with multiple Odoo versions</li>
-    <li>🖥️ Developer-optimized configurations</li>
-    <li>📁 Sample modules and best practices</li>
-  </ul>
+        <div class="section" id="introduction">
+            <p style="font-size: 1.1em; text-align: center; margin-bottom: 30px;">
+                The <strong>Odoo Setup Assistant</strong> is an essential module for developers, administrators, and consultants. It streamlines environment verification, dependency management, and configuration analysis, ensuring your Odoo instance runs smoothly and efficiently.
+            </p>
+        </div>
 
-  <h2 style="color: #4CAF50;">🎯 Who is it for?</h2>
-  <ul>
-    <li>Developers who want a fast, clean setup</li>
-    <li>Tech teams working across Odoo versions</li>
-    <li>Consultants who provision environments regularly</li>
-  </ul>
+        <div class="section" id="features">
+            <h2><span class="emoji">✨</span> Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><span class="emoji">🐍</span> Python & System Dependencies Check</h3>
+                    <p>Automatically scans for required Python libraries and system-level executables (like wkhtmltopdf, psql), highlighting any missing components critical for Odoo's operation and specific module functionalities.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="emoji">📦</span> Addon Python Requirements Management</h3>
+                    <p>Scans all custom and community addons for <code class="code">requirements.txt</code> files. Lists missing Python packages and provides a one-click option to install them directly into your Odoo environment.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="emoji">💾</span> Database Health Analysis</h3>
+                    <p>Verifies database connection parameters from <code class="code">odoo.conf</code>, attempts direct PostgreSQL server connection, and checks Odoo's current database session to ensure robust connectivity and proper configuration.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="emoji">⚙️</span> Odoo.conf Deep Scan</h3>
+                    <p>Analyzes your <code class="code">odoo.conf</code> file for critical path validations (addons_path, data_dir), performance settings (workers, limits), security configurations (admin_passwd, list_db), and common misconfigurations or typos.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="emoji">📄</span> Log File Analysis & Configuration</h3>
+                    <p>Provides tools to fetch, filter (by level, keyword), and display recent log entries. Includes diagnostic hints for common errors. Allows setting a custom log file path for analysis, overriding the <code class="code">odoo.conf</code> default for targeted troubleshooting.</p>
+                </div>
+                 <div class="feature-card">
+                    <h3><span class="emoji">📊</span> User-Friendly Interface</h3>
+                    <p>All checks and actions are available within a clean, tabbed Odoo interface, making it easy to navigate and interpret results. Supports opening in the main Odoo window for a full-view experience.</p>
+                </div>
+            </div>
+        </div>
 
-  <h2 style="color: #4CAF50;">📂 Installation</h2>
-  <p>
-    Clone the repository into your Odoo <code>addons/</code> folder and activate the module from the Apps menu.
-  </p>
+        <div class="section" id="who-for">
+            <h2><span class="emoji">🎯</span> Who is it for?</h2>
+            <ul>
+                <li>Odoo Developers needing rapid environment validation.</li>
+                <li>System Administrators maintaining Odoo instances.</li>
+                <li>Technical Consultants provisioning or troubleshooting client setups.</li>
+                <li>Teams managing multiple Odoo versions and configurations.</li>
+            </ul>
+        </div>
 
-  <h2 style="color: #4CAF50;">📌 Pro Tip</h2>
-  <p>
-    Pair this module with your internal tools and CI/CD pipeline for maximum efficiency.
-  </p>
+        <div class="section" id="installation">
+            <h2><span class="emoji">📂</span> Installation</h2>
+            <p>
+                1. Clone or download the <code class="code">odoo_setup_assistant</code> module.
+            </p>
+            <p>
+                2. Place it into your Odoo <code class="code">addons</code> directory.
+            </p>
+            <p>
+                3. Restart your Odoo server.
+            </p>
+            <p>
+                4. Navigate to 'Apps' in Odoo, search for "Odoo Setup Assistant", and click 'Activate'.
+            </p>
+        </div>
+        
+        <div class="section" id="pro-tip">
+            <h2><span class="emoji">📌</span> Pro Tip</h2>
+            <p>
+                Regularly use the Odoo Setup Assistant after server updates, new module installations, or configuration changes to proactively identify potential issues. Integrate checks into your CI/CD pipeline for automated environment validation.
+            </p>
+        </div>
 
-  <hr style="margin: 20px 0;">
-  <p style="font-size: 14px; color: #777;">
-    Developed by <strong>Ecosire</strong> – AI Automation, ERP, and Growth Tech.
-  </p>
-</div>
+        <div class="footer">
+            <p>
+                Developed by <strong>Ecosire (PRIVATE) LIMITED</strong>
+            </p>
+            <p>AI Automation, ERP Solutions, and Growth Technologies.</p>
+            <p>
+                <a href="https://www.ecosire.com/" target="_blank">Visit Ecosire.com</a>
+            </p>
+            <a href="https://wa.me/923130168262" class="whatsapp-button" target="_blank">
+                Contact us on WhatsApp
+            </a>
+        </div>
+    </div>
+</body>
+</html>
