@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_setup_assist_wizard_form" model="ir.ui.view">
+            <field name="name">setup.assist.wizard.form</field>
+            <field name="model">setup.assist.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Odoo Setup Assistant">
+                    <header>
+                        <button name="action_run_all_scans" string="Run All Scans" type="object" class="oe_highlight" icon="fa-play-circle"/>
+                        <button name="action_run_dependency_checks" string="Dependency Checks" type="object" icon="fa-cubes"/>
+                        <button name="action_run_db_checks" string="Database Checks" type="object" icon="fa-database"/>
+                        <button name="action_run_odoo_conf_checks" string="Analyze Odoo.conf" type="object" icon="fa-cogs"/>
+                    </header>
+                    <sheet>
+                        <group>
+                             <field name="general_message" nolabel="1" readonly="1" class="oe_inline"/>
+                        </group>
+                        <notebook>
+                            <page string="Dependencies" name="dependencies">
+                                <group class="mt16">
+                                    <field name="overall_dependency_status" widget="badge" decoration-success="overall_dependency_status == 'ok'" decoration-danger="overall_dependency_status == 'issues'"/>
+                                </group>
+                                <group string="Python Libraries">
+                                    <field name="python_dependencies_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                                <group string="System Executables">
+                                    <field name="system_dependencies_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                            </page>
+                            <page string="Database" name="database">
+                                 <group class="mt16">
+                                    <field name="db_status" widget="badge" decoration-success="db_status == 'ok'" decoration-danger="db_status == 'issues'" decoration-warning="db_status == 'warning'"/>
+                                </group>
+                                <group string="Database Connection &amp; Configuration">
+                                    <field name="db_connection_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                            </page>
+                            <page string="Odoo.conf" name="odoo_conf">
+                                <group class="mt16">
+                                    <field name="odoo_conf_status" widget="badge" decoration-success="odoo_conf_status == 'ok'" decoration-danger="odoo_conf_status == 'issues'" decoration-warning="odoo_conf_status == 'warning'"/>
+                                </group>
+                                <group string="Odoo Configuration File Analysis">
+                                    <field name="odoo_conf_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                            </page>
+                            <page string="Addon Python Deps" name="addon_python_deps">
+                                <group class="mt16">
+                                    <field name="addon_req_status" widget="badge"
+                                           decoration-success="addon_req_status in ('scanned_ok', 'install_done_ok')"
+                                           decoration-info="addon_req_status == 'install_inprogress'"
+                                           decoration-warning="addon_req_status in ('scanned_issues', 'install_done_errors')"
+                                           decoration-danger="addon_req_status in ('scanned_error', 'install_failed')"/>
+                                </group>
+                                <group class="o_ δύο_col">
+                                    <button name="action_scan_addon_python_dependencies" string="Scan Addon Python Dependencies" type="object" class="oe_highlight" icon="fa-search"/>
+                                    <button name="action_install_addon_python_dependencies" string="Install Discovered Dependencies" type="object"
+                                            confirm="CRITICAL WARNING: This action will attempt to install/update Python packages directly into your Odoo server's Python environment. This can take several minutes and requires the Odoo user to have necessary write permissions to the Python site-packages directory. It is strongly recommended to have backups and perform this in a controlled manner. Are you absolutely sure you want to proceed?"
+                                            icon="fa-download"
+                                            attrs="{'invisible': [('addon_req_status', '!=', 'scanned_issues')]}"/>
+                                </group>
+                                <group string="Scan Results &amp; Action Plan">
+                                    <field name="addon_req_scan_results" widget="text" nolabel="1" class="oe_mono_font" readonly="1"/>
+                                    <field name="packages_to_install_list" invisible="1"/> 
+                                </group>
+                                <group string="Installation Log">
+                                    <field name="addon_req_install_log" widget="text" nolabel="1" class="oe_mono_font" readonly="1"/>
+                                </group>
+                            </page>
+
+                            <page string="Log Analysis" name="log_analysis">
+                                <group class="mt16">
+                                    <field name="log_analysis_status" widget="badge"
+                                           decoration-success="log_analysis_status == 'success'"
+                                           decoration-warning="log_analysis_status == 'empty_after_filter'"
+                                           decoration-danger="log_analysis_status in ('no_log_file', 'error_reading')"/>
+                                </group>
+                                <group>
+                                    <field name="log_file_path_display" nolabel="0" readonly="1"/>
+                                </group>
+                                <group class="o_ δύο_col">
+                                    <field name="log_lines_to_fetch"/>
+                                    <field name="log_level_filter"/>
+                                    <field name="log_keyword_filter" placeholder="e.g., 'CRON', 'HTTP', 'ERROR'"/>
+                                </group>
+                                <group>
+                                    <button name="action_load_and_analyze_logs" string="Load &amp; Analyze Logs" type="object" class="oe_highlight" icon="fa-file-text-o"/>
+                                </group>
+                                <group string="Log Entries (Recent)">
+                                    <field name="log_display_content" widget="text" nolabel="1" class="oe_mono_font" readonly="1" style="max-height: 400px; overflow-y: auto;"/>
+                                </group>
+                                <group string="Diagnostic Hints">
+                                     <field name="log_diagnostic_hints" widget="text" nolabel="1" class="oe_inline" readonly="1"/>
+                                </group>
+                            </page>
+
+                            <page string="Other Checks (Future)" name="other_checks">
+                                <group string="Network Port Checks">
+                                     <field name="port_check_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                                <group string="File System Permissions">
+                                     <field name="file_permissions_results" widget="text" nolabel="1" class="oe_mono_font"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Close" class="btn-secondary" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_setup_assist_check" model="ir.actions.act_window">
+            <field name="name">Odoo Setup Assistant</field>
+            <field name="res_model">setup.assist.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Diagnose your Odoo setup.
+                </p><p>
+                    This tool helps verify your Odoo environment configuration,
+                    check dependencies, analyze odoo.conf, manage Python requirements for addons, and view logs.
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_setup_assist_root"
+            name="Odoo Setup Assistant" 
+            web_icon="setup_assist,static/description/icon.png"
+            sequence="200" 
+            groups="base.group_system"/>
+
+        <menuitem
+            id="menu_setup_assist_run_diagnostics"
+            name="Run Diagnostics"
+            parent="menu_setup_assist_root"
+            action="action_setup_assist_check"
+            sequence="10"/>
+    </data>
+</odoo>
