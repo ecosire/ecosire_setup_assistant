@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Odoo Setup Assistant',
+    'module_name': 'odoo_setup_assistant',
     'version': '1.1', # Incremented version for new features
     'summary': 'Diagnose Odoo setup, configuration, dependencies, and manage addon Python requirements.',
     'description': """
