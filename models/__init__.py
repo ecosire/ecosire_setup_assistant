@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from . import setup_assist_wizard
+from . import odoo_setup_assistant_wizard

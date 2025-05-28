@@ -17,7 +17,7 @@ Helps ensure your Odoo environment is correctly set up for optimal performance a
     'depends': ['base'], # Depends on the base Odoo module
     'data': [
         'security/ir.model.access.csv',
-        'views/setup_assist_views.xml',
+        'views/odoo_setup_assistant_views.xml',
         # Add security CSV if specific groups beyond base.group_system are needed later
     ],
     'installable': True,

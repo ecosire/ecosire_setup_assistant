@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_setup_assist_wizard_form" model="ir.ui.view">
+        <record id="view_odoo_setup_assistant_wizard_form" model="ir.ui.view">
             <field name="name">setup.assist.wizard.form</field>
             <field name="model">setup.assist.wizard</field>
             <field name="arch" type="xml">
@@ -111,7 +111,7 @@
             </field>
         </record>
 
-        <record id="action_setup_assist_check" model="ir.actions.act_window">
+        <record id="action_odoo_setup_assistant_check" model="ir.actions.act_window">
             <field name="name">Odoo Setup Assistant</field>
             <field name="res_model">setup.assist.wizard</field>
             <field name="view_mode">form</field>
@@ -127,17 +127,17 @@
         </record>
 
         <menuitem
-            id="menu_setup_assist_root"
+            id="menu_odoo_setup_assistant_root"
             name="Odoo Setup Assistant" 
-            web_icon="setup_assist,static/description/icon.png"
+            web_icon="odoo_setup_assistant,static/description/icon.png"
             sequence="200" 
             groups="base.group_system"/>
 
         <menuitem
-            id="menu_setup_assist_run_diagnostics"
+            id="menu_odoo_setup_assistant_run_diagnostics"
             name="Run Diagnostics"
-            parent="menu_setup_assist_root"
-            action="action_setup_assist_check"
+            parent="menu_odoo_setup_assistant_root"
+            action="action_odoo_setup_assistant_check"
             sequence="10"/>
     </data>
 </odoo>
