@@ -57,7 +57,7 @@
                                     <button name="action_install_addon_python_dependencies" string="Install Discovered Dependencies" type="object"
                                             confirm="CRITICAL WARNING: This action will attempt to install/update Python packages directly into your Odoo server's Python environment. This can take several minutes and requires the Odoo user to have necessary write permissions to the Python site-packages directory. It is strongly recommended to have backups and perform this in a controlled manner. Are you absolutely sure you want to proceed?"
                                             icon="fa-download"
-                                            attrs="{'invisible': [('addon_req_status', '!=', 'scanned_issues')]}"/>
+                                            invisible="addon_req_status != 'scanned_issues'"/>
                                 </group>
                                 <group string="Scan Results &amp; Action Plan">
                                     <field name="addon_req_scan_results" widget="text" nolabel="1" class="oe_mono_font" readonly="1"/>

@@ -16,11 +16,12 @@ Helps ensure your Odoo environment is correctly set up for optimal performance a
     'category': 'Extra Tools', # Or 'Administration', 'Technical'
     'depends': ['base'], # Depends on the base Odoo module
     'data': [
+        'security/ir.model.access.csv',
         'views/setup_assist_views.xml',
         # Add security CSV if specific groups beyond base.group_system are needed later
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'license': 'LGPL-3',
     # It's good practice to note external Python dependencies if your module *itself*
