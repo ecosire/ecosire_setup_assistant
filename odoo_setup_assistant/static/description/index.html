@@ -5,7 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odoo Setup Assistant</title>
     <style>
-        /* Styles retained from previous code. Well-structured and elegant already. */
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #ecf0f1;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --border-color: #ddd;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 6px 15px rgba(0,0,0,0.12);
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            z-index: 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .module-emoji {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .section h2 .emoji {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .section p, .section ul, .section ol {
+            font-size: 1.08rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, var(--secondary-color), #fff);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 6px solid var(--primary-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), transparent);
+            z-index: 0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0 0 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card h3 .emoji {
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+            vertical-align: middle;
+        }
+
+        .feature-card p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 1.5rem 0;
+        }
+
+        ul li {
+            background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M4.5%209L1.5%206L2.205%205.295L4.5%207.59L9.795%202.295L10.5%203L4.5%209Z%22%20fill%3D%22%233498db%22/%3E%3C/svg%3E') no-repeat left center;
+            padding-left: 24px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .code {
+            background-color: #e9ecef;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 0.25rem 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .whatsapp-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            margin-top: 1.5rem;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #1DA851;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .whatsapp-button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.8rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header .module-emoji {
+                font-size: 3rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .whatsapp-button {
+                width: 100%;
+                max-width: 300px;
+                margin: 1.5rem auto 0;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .screenshots-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .screenshot-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 0.8rem 0.7rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 170px;
+            min-width: 140px;
+            max-width: 180px;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .screenshot-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px) scale(1.03);
+        }
+        .screenshot-card img {
+            max-width: 120px;
+            max-height: 90px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            border: 1px solid #e3e8ee;
+            object-fit: contain;
+        }
+        .screenshot-card .caption {
+            font-size: 0.98rem;
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+        }
+        .screenshot-card .desc {
+            font-size: 0.89rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .screenshots-gallery {
+                max-width: 100%;
+                gap: 0.7rem;
+            }
+            .screenshot-card {
+                width: 38vw;
+                min-width: 120px;
+                max-width: 160px;
+            }
+        }
+        @media (max-width: 600px) {
+            .screenshots-gallery {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .screenshot-card {
+                width: 90vw;
+                max-width: 180px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -13,87 +365,137 @@
         <div class="header">
             <div class="module-emoji">🛠️</div>
             <h1>Odoo Setup Assistant</h1>
-            <p>Optimize, validate, and automate your Odoo environment with ease.</p>
+            <p>Your comprehensive diagnostic and configuration toolkit for Odoo environments.</p>
         </div>
 
         <div class="section" id="introduction">
             <p style="font-size: 1.1em; text-align: center; margin-bottom: 30px;">
-                The <strong>Odoo Setup Assistant</strong> empowers developers, consultants, and sysadmins with powerful diagnostic tools to streamline your Odoo deployment. Easily detect configuration issues, manage dependencies, and validate your environment — all from within Odoo.
+                The <strong>Odoo Setup Assistant</strong> is an essential module for developers, administrators, and consultants. It streamlines environment verification, dependency management, and configuration analysis, ensuring your Odoo instance runs smoothly and efficiently.
             </p>
         </div>
 
         <div class="section" id="features">
-            <h2><span class="emoji">✨</span> Comprehensive Features</h2>
+            <h2><span class="emoji">✨</span> Key Features</h2>
             <div class="features-grid">
-
                 <div class="feature-card">
-                    <h3><span class="emoji">🐍</span> Python & System Requirements</h3>
-                    <p>Identify missing Python libraries and essential binaries like <code class="code">wkhtmltopdf</code> and <code class="code">psql</code> to ensure your Odoo runs without errors.</p>
+                    <h3><span class="emoji">🐍</span> Python & System Dependencies Check</h3>
+                    <p>Automatically scans for required Python libraries and system-level executables (like wkhtmltopdf, psql), highlighting any missing components critical for Odoo's operation and specific module functionalities.</p>
                 </div>
-
                 <div class="feature-card">
-                    <h3><span class="emoji">📦</span> Auto-Detect Addon Dependencies</h3>
-                    <p>Scan all addons for <code class="code">requirements.txt</code> files and highlight any unmet dependencies. One-click install available.</p>
+                    <h3><span class="emoji">📦</span> Addon Python Requirements Management</h3>
+                    <p>Scans all custom and community addons for <code class="code">requirements.txt</code> files. Lists missing Python packages and provides a one-click option to install them directly into your Odoo environment.</p>
                 </div>
-
                 <div class="feature-card">
-                    <h3><span class="emoji">💾</span> Database Connectivity Report</h3>
-                    <p>Validate your PostgreSQL connection using credentials from <code class="code">odoo.conf</code> and test live Odoo DB session health.</p>
+                    <h3><span class="emoji">💾</span> Database Health Analysis</h3>
+                    <p>Verifies database connection parameters from <code class="code">odoo.conf</code>, attempts direct PostgreSQL server connection, and checks Odoo's current database session to ensure robust connectivity and proper configuration.</p>
                 </div>
-
                 <div class="feature-card">
-                    <h3><span class="emoji">⚙️</span> Config File Scanner</h3>
-                    <p>Audit your <code class="code">odoo.conf</code> for critical paths, tuning parameters, and potential misconfigurations including security flaws.</p>
+                    <h3><span class="emoji">⚙️</span> Odoo.conf Deep Scan</h3>
+                    <p>Analyzes your <code class="code">odoo.conf</code> file for critical path validations (addons_path, data_dir), performance settings (workers, limits), security configurations (admin_passwd, list_db), and common misconfigurations or typos.</p>
                 </div>
-
-                <div class="feature-card">
-                    <h3><span class="emoji">📄</span> Log Analyzer</h3>
-                    <p>View recent log entries, filter by keyword or log level, and get actionable insights. Supports overriding log file paths for targeted debugging.</p>
+                 <div class="feature-card">
+                    <h3><span class="emoji">📄</span> Log File Analysis & Configuration</h3>
+                    <p>Provides tools to fetch, filter (by level, keyword), and display recent log entries. Includes diagnostic hints for common errors. Allows setting a custom log file path for analysis, overriding the <code class="code">odoo.conf</code> default for targeted troubleshooting.</p>
                 </div>
-
-                <div class="feature-card">
-                    <h3><span class="emoji">🛠️</span> One-Click Fixes</h3>
-                    <p>Trigger automated installation of missing packages and tools directly from the UI. Requires sufficient server-level permissions.</p>
+                 <div class="feature-card">
+                    <h3><span class="emoji">🛠️</span> Automated Dependency Installation</h3>
+                    <p>Offers a convenient action to attempt automatic installation of identified missing Python libraries and system dependencies directly from the Odoo interface (requires appropriate server permissions).</p>
                 </div>
-
-                <div class="feature-card">
-                    <h3><span class="emoji">🔄</span> Restart Odoo Instantly</h3>
-                    <p>Initiate a safe restart of the Odoo service right from the interface — ideal after changes or installations. (Requires sudo access)</p>
+                 <div class="feature-card">
+                    <h3><span class="emoji">🔄</span> Odoo Service Restart</h3>
+                    <p>Provides a direct button within the assistant to safely initiate a restart of the Odoo service, useful after installing new dependencies or applying configuration changes (requires appropriate server permissions).</p>
                 </div>
-
-                <div class="feature-card">
-                    <h3><span class="emoji">📊</span> Polished Interface</h3>
-                    <p>Enjoy an intuitive, tabbed UI that makes diagnostics easy and accessible within Odoo. Fully responsive and easy to use.</p>
+                 <div class="feature-card">
+                    <h3><span class="emoji">📊</span> User-Friendly Interface</h3>
+                    <p>All checks and actions are available within a clean, tabbed Odoo interface, making it easy to navigate and interpret results. Supports opening in the main Odoo window for a full-view experience.</p>
                 </div>
-
-                <div class="feature-card">
-                    <h3><span class="emoji">🔗</span> GitHub Sync Management</h3>
-                    <p>Connect and manage GitHub repositories to sync or update your custom addons, even from private sources.</p>
+                 <div class="feature-card">
+                    <h3><span class="emoji">🔗</span> GitHub Repository Management</h3>
+                    <p>Configure GitHub repositories (public or private with PAT) to easily clone or pull module updates directly into your Odoo addons path from the interface. Automate code deployment for smoother development workflows.</p>
                 </div>
             </div>
         </div>
 
-        <div class="section" id="gallery">
-            <h2><span class="emoji">📸</span> Visual Insights</h2>
+        <div class="section" id="who-for">
+            <h2><span class="emoji">🎯</span> Who is it for?</h2>
+            <ul>
+                <li>Odoo Developers needing rapid environment validation.</li>
+                <li>System Administrators maintaining Odoo instances.</li>
+                <li>Technical Consultants provisioning or troubleshooting client setups.</li>
+                <li>Teams managing multiple Odoo versions and configurations.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="installation">
+            <h2><span class="emoji">📂</span> Installation</h2>
+            <p>
+                1. Clone or download the <code class="code">odoo_setup_assistant</code> module.
+            </p>
+            <p>
+                2. Place it into your Odoo <code class="code">addons</code> directory.
+            </p>
+            <p>
+                3. Restart your Odoo server.
+            </p>
+            <p>
+                4. Navigate to 'Apps' in Odoo, search for "Odoo Setup Assistant", and click 'Activate'.
+            </p>
+        </div>
+        
+        <div class="section" id="pro-tip">
+            <h2><span class="emoji">📌</span> Pro Tip</h2>
+            <p>
+                Regularly use the Odoo Setup Assistant after server updates, new module installations, or configuration changes to proactively identify potential issues. Integrate checks into your CI/CD pipeline for automated environment validation.
+            </p>
+        </div>
+
+        <!-- Screenshots Gallery Section -->
+        <div class="section" id="screenshots">
+            <h2><span class="emoji">🖼️</span> Screenshots</h2>
             <div class="screenshots-gallery">
                 <div class="screenshot-card">
-                    <img src="screenshot1.png" alt="Dependency Check UI">
-                    <div class="caption">Dependency Overview</div>
-                    <div class="desc">Clear visual list of missing packages.</div>
+                    <img src="Screen 1.png" alt="Screen 1">
+                    <div class="caption">Screen 1</div>
+                    <div class="desc">Main Dashboard Overview</div>
                 </div>
                 <div class="screenshot-card">
-                    <img src="screenshot2.png" alt="Database Check UI">
-                    <div class="caption">Database Validator</div>
-                    <div class="desc">Shows live connectivity checks with alerts.</div>
+                    <img src="Screen 2.png" alt="Screen 2">
+                    <div class="caption">Screen 2</div>
+                    <div class="desc">Environment Checks & Results</div>
                 </div>
-                <!-- Add more screenshots as needed -->
+                <div class="screenshot-card">
+                    <img src="Screen 3.png" alt="Screen 3">
+                    <div class="caption">Screen 3</div>
+                    <div class="desc">Python & System Dependencies</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 4.png" alt="Screen 4">
+                    <div class="caption">Screen 4</div>
+                    <div class="desc">Database Health Analysis</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 5.png" alt="Screen 5">
+                    <div class="caption">Screen 5</div>
+                    <div class="desc">Log File Analysis</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 6.png" alt="Screen 6">
+                    <div class="caption">Screen 6</div>
+                    <div class="desc">GitHub Repository Management</div>
+                </div>
             </div>
         </div>
 
         <div class="footer">
-            <p>Need assistance or want to contribute?</p>
-            <a class="whatsapp-button" href="https://wa.me/923001234567" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> Contact via WhatsApp
+            <p>
+                Developed by <strong>Ecosire (PRIVATE) LIMITED</strong>
+            </p>
+            <p>AI Automation, ERP Solutions, and Growth Technologies.</p>
+            <p>
+                <a href="https://www.ecosire.com/" target="_blank">Visit Ecosire.com</a>
+            </p>
+            <a href="https://wa.me/923130168262" class="whatsapp-button" target="_blank">
+                Contact us on WhatsApp
             </a>
         </div>
     </div>
