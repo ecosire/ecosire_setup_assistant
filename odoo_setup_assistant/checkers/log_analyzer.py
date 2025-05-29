@@ -136,7 +136,10 @@ class LogAnalyzer:
             if line_passes and level_filter != 'ALL':
                 match = LOG_LINE_REGEX.match(line)
                 if match:
-                    if match.group('level').upper() != level_filter.upper():
+                    # Patch: ensure both are not None before .upper()
+                    log_level = match.group('level') or ''
+                    filter_level = level_filter or ''
+                    if log_level.upper() != filter_level.upper():
                         line_passes = False
                 else: # If line doesn't match Odoo format, it won't pass specific level filters
                     if level_filter not in ['INFO', 'DEBUG']: # Only show non-matching lines for broad filters

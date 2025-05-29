@@ -141,7 +141,7 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_dependency_results()
         self.general_message = "Dependency checks completed."
-        return self._reopen_wizard()
+        return None
 
     # --- Database Checks --- (Keep existing methods)
     def _format_db_check_results(self):
@@ -159,7 +159,7 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_db_check_results()
         self.general_message = "Database checks completed."
-        return self._reopen_wizard()
+        return None
 
     # --- Odoo.conf Checks --- (Keep existing methods)
     def _format_odoo_conf_results(self):
@@ -177,7 +177,7 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_odoo_conf_results()
         self.general_message = "Odoo.conf analysis completed."
-        return self._reopen_wizard()
+        return None
 
     # --- Addon Python Dependency Checks & Installation --- (Keep existing methods)
     def _update_addon_req_ui_fields(self, scan_summary_lines=None, install_log_lines=None, status=None, packages_to_install_str=None):
@@ -195,7 +195,7 @@ class SetupAssistWizard(models.TransientModel):
         self._update_addon_req_ui_fields(
             scan_summary_lines=["Scanning addon dependencies..."],
             install_log_lines=["No installation performed yet."],
-            status='scanned_error', 
+            status='scanned_error',
             packages_to_install_str=""
         )
         try:
@@ -220,13 +220,13 @@ class SetupAssistWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Critical error during addon dependency scan action: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"A critical error occurred during scan: {e}"], status='scanned_error')
-        return self._reopen_wizard()
+        return None
 
     def action_install_addon_python_dependencies(self):
         self.ensure_one()
         if not self.packages_to_install_list:
             self._update_addon_req_ui_fields(install_log_lines=["No packages were marked for installation. Scan first."])
-            return self._reopen_wizard()
+            return None
         self._update_addon_req_ui_fields(status='install_inprogress', install_log_lines=["Starting installation...\n"])
         packages_specs = [spec.strip() for spec in self.packages_to_install_list.split(';;;') if spec.strip()]
         try:
@@ -251,35 +251,29 @@ class SetupAssistWizard(models.TransientModel):
                 install_log_lines=[self.addon_req_install_log or "", f"\nA critical error occurred: {e}"],
                 status='install_failed'
             )
-        return self._reopen_wizard()
+        return None
 
     # --- Log File Analysis (New Method) ---
     def action_load_and_analyze_logs(self):
         self.ensure_one()
-        
         analyzer = log_analyzer.LogAnalyzer()
         self.log_file_path_display = analyzer.log_file_path or "Odoo logfile not configured or found."
         self.log_display_content = f"Loading logs from: {self.log_file_path_display}...\n"
         self.log_diagnostic_hints = "Analyzing..."
         self.log_analysis_status = 'not_run' # Temp status
-
         if not analyzer.log_file_path:
             self.log_analysis_status = 'no_log_file'
             self.log_display_content = "Odoo logfile path ('logfile') is not configured in odoo.conf. Cannot read logs from file."
             self.log_diagnostic_hints = "Configure 'logfile' in odoo.conf to enable this feature."
-            return self._reopen_wizard()
-
+            return None
         try:
             lines_to_fetch = self.log_lines_to_fetch if self.log_lines_to_fetch > 0 else 200 # Ensure positive
-            
             log_lines, status_key = analyzer.get_filtered_log_lines(
                 num_lines=lines_to_fetch,
                 level_filter=self.log_level_filter if self.log_level_filter != 'ALL' else None,
                 keyword_filter=self.log_keyword_filter or None
             )
-            
             self.log_analysis_status = status_key # 'success', 'no_log_file', 'error_reading', 'empty_after_filter'
-            
             if status_key == 'success':
                 self.log_display_content = "\n".join(log_lines) if log_lines else "No log entries found (or file is empty)."
                 if log_lines:
@@ -293,14 +287,12 @@ class SetupAssistWizard(models.TransientModel):
             else: # 'no_log_file' or 'error_reading'
                 self.log_display_content = "\n".join(log_lines) # This will contain the error message from analyzer
                 self.log_diagnostic_hints = "Review the error message above regarding log file access."
-
         except Exception as e:
             _logger.error("Error during log analysis action: %s", e, exc_info=True)
             self.log_display_content = f"An unexpected error occurred while analyzing logs: {str(e)}"
             self.log_diagnostic_hints = "Check Odoo server logs for more details."
             self.log_analysis_status = 'error_reading'
-            
-        return self._reopen_wizard()
+        return None
 
     # --- Run All Scans (Not installations) ---
     def action_run_all_scans(self):
@@ -309,7 +301,6 @@ class SetupAssistWizard(models.TransientModel):
         self._format_dependency_results()
         self._format_db_check_results()
         self._format_odoo_conf_results()
-        
         try:
             addon_checker = addon_requirements_checker.AddonRequirementsChecker()
             analysis = addon_checker.analyze_dependencies()
@@ -324,6 +315,40 @@ class SetupAssistWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Error during 'Run All Scans' for addon dependencies: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"Error during addon dependency scan: {e}"], status='scanned_error')
-
         self.general_message = "All environment scans completed. Review individual tabs. Log analysis is a manual action on its respective tab."
-        return self._reopen_wizard()
+        return None
+
+    def action_install_all_missing_dependencies(self):
+        self.ensure_one()
+        dep_checker = system_checks.DependencyChecker()
+        py_missing, _ = dep_checker.check_python_libraries()
+        sys_missing, _ = dep_checker.check_system_dependencies()
+        sys_missing_names = [item['name'] for item in sys_missing]
+        installer = self.env['setup.assistant.dependency.installer']
+        result = installer.install_all(py_missing, sys_missing_names)
+        summary_lines = []
+        summary_lines.append('Python Packages:')
+        for pkg, res in result['python'].items():
+            summary_lines.append(f"- {pkg}: {'✅' if res['success'] else '❌'}")
+            if res['log']:
+                summary_lines.append(res['log'])
+        summary_lines.append('System Packages:')
+        for pkg, res in result['system'].items():
+            summary_lines.append(f"- {pkg}: {'✅' if res['success'] else '❌'}")
+            if res['log']:
+                summary_lines.append(res['log'])
+        self.general_message = '\n'.join(summary_lines)
+        self._format_dependency_results()
+        return None
+
+    def action_restart_odoo_service(self):
+        self.ensure_one()
+        installer = self.env['setup.assistant.dependency.installer']
+        result = installer.restart_odoo_service()
+        if result.get('success'):
+            self.general_message = _('Odoo service restart initiated successfully.\n') + result.get('log', '')
+        else:
+            self.general_message = _('Failed to restart Odoo service.\n') + result.get('log', '')
+            if result.get('commands_tried'):
+                self.general_message += '\nCommands tried:\n' + '\n'.join(result['commands_tried'])
+        return None

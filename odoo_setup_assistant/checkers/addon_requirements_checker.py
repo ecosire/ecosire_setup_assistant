@@ -244,3 +244,10 @@ class AddonRequirementsChecker:
                 failed[package_spec] = str(e)
         
         return {'success': success, 'failed': failed, 'log_lines': log_lines}
+
+    def action_run_db_checks(self):
+        self.ensure_one()
+        self._format_db_check_results()
+        self.general_message = "Database checks completed."
+        # Do NOT return self._reopen_wizard()
+        return None
