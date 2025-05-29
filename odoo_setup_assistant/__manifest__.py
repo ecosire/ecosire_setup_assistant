@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Odoo Setup Assistant',
-    'module_name': 'odoo_setup_assistant',
     'version': '1.9.5', # Incremented version for new features
     'summary': 'Diagnose Odoo setup, configuration, dependencies, and manage addon Python requirements.',
     'description': 'static/description/index.html',
@@ -24,5 +23,5 @@
     # directly depends on something not standard in Odoo's core requirements.
     # For the 'packaging' library used by addon_requirements_checker.py,
     # it's often present with pip/setuptools. If it were less common, you might note it here.
-    # 'external_dependencies': {'python': ['packaging']}, # Example
+    'external_dependencies': {'python': ['packaging']}, # Example
 }
