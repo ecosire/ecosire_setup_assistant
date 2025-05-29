@@ -24,7 +24,12 @@ class SetupAssistGithubRepo(models.Model):
     active = fields.Boolean(string='Active', default=True, tracking=True)
     sequence = fields.Integer(string='Sequence', default=10)
     last_git_log = fields.Text(string='Last Git Operation Log', readonly=True)
-    last_git_status = fields.Char(string='Last Git Operation Status', readonly=True)
+    last_git_status = fields.Selection([
+        ('success', 'Success'),
+        ('error', 'Error'),
+        ('pending', 'Pending'),
+        ('not_run', 'Not Run Yet'),
+    ], string='Last Git Operation Status', readonly=True, default='not_run')
 
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Repository name must be unique.'),
@@ -54,27 +59,27 @@ class SetupAssistGithubRepo(models.Model):
             _logger.info(f"Executing git command: {' '.join(command_list)} in {cwd or '.'}")
             process = subprocess.run(command_list, cwd=cwd, capture_output=True, text=True, check=True, shell=False)
             self.last_git_log = process.stdout + process.stderr
-            self.last_git_status = 'Success'
+            self.last_git_status = 'success'
             self.message_post(body=_(f'Git command executed successfully for {self.name}.'))
             _logger.info(f"Git command successful for {self.name}")
             return True, process.stdout.strip()
         except subprocess.CalledProcessError as e:
             self.last_git_log = e.stdout + e.stderr
-            self.last_git_status = f'Error: {e.returncode}'
+            self.last_git_status = 'error'
             error_message = _(f'Git command failed for {self.name} (Exit Code {e.returncode}):\n{e.stdout}\n{e.stderr}')
             self.message_post(body=error_message)
             _logger.error(f"Git command failed for {self.name}: {e.stdout} {e.stderr}")
             return False, error_message
         except FileNotFoundError:
              self.last_git_log = "Git executable not found." # Specific error for missing git
-             self.last_git_status = 'Error: Git Not Found'
+             self.last_git_status = 'error'
              error_message = _("Git executable not found. Please ensure Git is installed on the server and in the system's PATH.")
              self.message_post(body=error_message)
              _logger.error("Git executable not found.")
              return False, error_message
         except Exception as e:
             self.last_git_log = str(e)
-            self.last_git_status = 'Error: Unknown'
+            self.last_git_status = 'error'
             error_message = _(f'An unexpected error occurred during git operation for {self.name}: {e}')
             self.message_post(body=error_message)
             _logger.exception(f"Unexpected error during git operation for {self.name}")
@@ -109,7 +114,7 @@ class SetupAssistGithubRepo(models.Model):
              except OSError as e:
                  error_message = _(f"Error creating parent directory {parent_dir}: {e}")
                  self.last_git_log = str(e)
-                 self.last_git_status = 'Error: Directory Creation Failed'
+                 self.last_git_status = 'error'
                  self.message_post(body=error_message)
                  _logger.error(error_message)
                  return False, error_message
@@ -140,7 +145,7 @@ class SetupAssistGithubRepo(models.Model):
                 # Error out to prevent data loss or unexpected behavior.
                 error_message = _(f"Target path {target_path} exists but is not a Git repository.")
                 self.last_git_log = error_message
-                self.last_git_status = 'Error: Not a Git Repo'
+                self.last_git_status = 'error'
                 self.message_post(body=error_message)
                 _logger.error(error_message)
                 return False, error_message

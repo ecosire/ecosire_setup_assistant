@@ -2,12 +2,11 @@
 <odoo>
     <data>
         <!-- Tree View -->
-        <record id="view_setup_assist_github_repo_tree" model="ir.ui.view">
-            <field name="name">setup.assist.github.repo.tree</field>
+        <record id="view_setup_assist_github_repo_list" model="ir.ui.view">
+            <field name="name">setup.assist.github.repo.list</field>
             <field name="model">setup.assist.github.repo</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
-                <list string="GitHub Repositories" decoration-info="last_git_status == 'success'" decoration-danger="last_git_status == 'error'">
+                <list string="GitHub Repositories">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="repo_url"/>
@@ -81,7 +80,8 @@
         <record id="action_setup_assist_github_repo" model="ir.actions.act_window">
             <field name="name">GitHub Repositories</field>
             <field name="res_model">setup.assist.github.repo</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_setup_assist_github_repo_list"/>
             <field name="target">main</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

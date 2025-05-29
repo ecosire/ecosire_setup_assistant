@@ -2,6 +2,12 @@
 from odoo import models, fields, api, _
 # from odoo.exceptions import UserError # Not used yet, but good for future
 import logging
+import platform
+import psutil
+import shutil
+import os
+import json
+from odoo import release as odoo_release
 
 _logger = logging.getLogger(__name__)
 
@@ -88,6 +94,19 @@ class SetupAssistWizard(models.TransientModel):
     port_check_results = fields.Text(string="Network Port Check", readonly=True, default="Not implemented yet.")
     file_permissions_results = fields.Text(string="File Permissions Check", readonly=True, default="Not implemented yet.")
 
+    system_info = fields.Text(string="System Information", compute="_compute_system_info")
+    system_cpu_percent = fields.Float(string="CPU Usage (%)", compute="_compute_system_info")
+    system_mem_percent = fields.Float(string="Memory Usage (%)", compute="_compute_system_info")
+    system_mem_total = fields.Char(string="Total Memory", compute="_compute_system_info")
+    system_mem_used = fields.Char(string="Used Memory", compute="_compute_system_info")
+    system_disk_percent = fields.Float(string="Disk Usage (%)", compute="_compute_system_info")
+    system_disk_total = fields.Char(string="Total Disk", compute="_compute_system_info")
+    system_disk_used = fields.Char(string="Used Disk", compute="_compute_system_info")
+    system_uptime = fields.Char(string="Uptime", compute="_compute_system_info")
+    system_os = fields.Char(string="OS", compute="_compute_system_info")
+    system_python = fields.Char(string="Python Version", compute="_compute_system_info")
+    system_odoo = fields.Char(string="Odoo Version", compute="_compute_system_info")
+    system_graph_data = fields.Text(string="System Graph Data (JSON)", compute="_compute_system_info")
 
     @api.model
     def default_get(self, fields_list):
@@ -361,3 +380,54 @@ class SetupAssistWizard(models.TransientModel):
             self.env.cache.invalidate()
             updated_self = self.browse(self.id) # Re-fetch
             updated_self.general_message = self.general_message + "\n\n-- Odoo Restart Status --\n" + updated_self.general_message
+
+    def action_restart_odoo_service(self):
+        """Restart the Odoo service. Placeholder for actual restart logic."""
+        self.ensure_one()
+        # You can implement actual restart logic here, e.g., call a shell command or use a helper model
+        self.general_message = _("Odoo service restart requested (placeholder). If you want to implement actual restart logic, add it here.")
+        return None
+
+    def _compute_system_info(self):
+        for rec in self:
+            try:
+                cpu_percent = psutil.cpu_percent(interval=0.5)
+                mem = psutil.virtual_memory()
+                disk = shutil.disk_usage("/")
+                uptime = os.popen('uptime -p').read().strip() if hasattr(os, 'popen') else "N/A"
+                rec.system_info = (
+                    f"OS: {platform.system()} {platform.release()}\n"
+                    f"CPU Usage: {cpu_percent}%\n"
+                    f"Memory: {mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB ({mem.percent}%)\n"
+                    f"Disk: {disk.used // (1024**3)}GB / {disk.total // (1024**3)}GB\n"
+                    f"Uptime: {uptime}\n"
+                    f"Python: {platform.python_version()}\n"
+                    f"Odoo: {getattr(odoo_release, 'version', 'N/A')}\n"
+                )
+                rec.system_cpu_percent = cpu_percent
+                rec.system_mem_percent = mem.percent
+                rec.system_mem_total = f"{mem.total // (1024**2)} MB"
+                rec.system_mem_used = f"{mem.used // (1024**2)} MB"
+                rec.system_disk_percent = (disk.used / disk.total) * 100 if disk.total else 0
+                rec.system_disk_total = f"{disk.total // (1024**3)} GB"
+                rec.system_disk_used = f"{disk.used // (1024**3)} GB"
+                rec.system_uptime = uptime
+                rec.system_os = f"{platform.system()} {platform.release()}"
+                rec.system_python = platform.python_version()
+                rec.system_odoo = getattr(odoo_release, 'version', 'N/A')
+                # For chart.js or similar
+                rec.system_graph_data = json.dumps({
+                    'cpu': cpu_percent,
+                    'mem': mem.percent,
+                    'disk': rec.system_disk_percent,
+                })
+            except Exception as e:
+                rec.system_info = f"Error fetching system info: {e}"
+                rec.system_graph_data = json.dumps({'cpu': 0, 'mem': 0, 'disk': 0})
+
+    def action_scan_system_info(self):
+        """Trigger recomputation of system information fields."""
+        self.ensure_one()
+        # The fields are computed, so we can just force recompute
+        self._compute_system_info()
+        self.general_message = _("System information scan completed.")
