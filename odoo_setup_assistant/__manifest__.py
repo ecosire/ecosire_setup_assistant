@@ -8,10 +8,14 @@
     'author': 'ECOSIRE (PRIVATE) LIMITED',
     'website': 'https://www.ecosire.com/',
     'category': 'Extra Tools', # Or 'Administration', 'Technical'
-    'depends': ['base'], # Depends on the base Odoo module
+    'depends': ['base', 'mail'], # Depends on the base Odoo module and mail for mail.thread/activity
     'data': [
         'security/ir.model.access.csv',
+        'views/menu.xml',
+        'views/github_repo_views.xml',
         'views/odoo_setup_assistant_views.xml',
+        'views/res_config_settings_views.xml',
+        'data/setup_assist_data.xml',
         # Add security CSV if specific groups beyond base.group_system are needed later
     ],
     'installable': True,

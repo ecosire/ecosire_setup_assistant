@@ -11,6 +11,7 @@
                         <button name="action_run_dependency_checks" string="Dependency Checks" type="object" icon="fa-cubes"/>
                         <button name="action_run_db_checks" string="Database Checks" type="object" icon="fa-database"/>
                         <button name="action_run_odoo_conf_checks" string="Analyze Odoo.conf" type="object" icon="fa-cogs"/>
+                        <button name="%(action_setup_assist_github_repo)d" string="Configure GitHub Repositories" type="action" icon="fa-cog" help="Add or edit the list of GitHub repositories to manage."/>
                     </header>
                     <sheet>
                         <group>
@@ -94,6 +95,16 @@
                                 </group>
                             </page>
 
+                            <page string="GitHub Updates" name="github_updates">
+                                <group string="Manage GitHub Repositories">
+                                    <field name="github_repo_ids" widget="many2many_tags" options="{'no_create': True}" />
+                                    <button name="action_update_github_repos_and_restart" string="Update Selected Repos &amp; Restart Odoo" type="object" class="oe_highlight" icon="fa-github" help="Clones/Pulls selected repositories and restarts the Odoo service."/>
+                                </group>
+                                 <group string="Recent GitHub Update Log">
+                                     <field name="general_message" nolabel="1" readonly="1" class="oe_mono_font" style="min-height: 150px;"/>
+                                 </group>
+                            </page>
+
                             <page string="Other Checks (Future)" name="other_checks">
                                 <group string="Network Port Checks">
                                      <field name="port_check_results" widget="text" nolabel="1" class="oe_mono_font"/>
@@ -115,7 +126,7 @@
             <field name="name">Odoo Setup Assistant</field>
             <field name="res_model">setup.assist.wizard</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
+            <field name="target">main</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Diagnose your Odoo setup.

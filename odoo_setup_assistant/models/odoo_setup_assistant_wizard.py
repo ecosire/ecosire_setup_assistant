@@ -78,6 +78,12 @@ class SetupAssistWizard(models.TransientModel):
         ('empty_after_filter', 'No Logs Found Matching Filters')
     ], string="Log Analysis Status", default='not_run', readonly=True)
 
+    # --- GitHub Integration Fields ---
+    github_repo_ids = fields.Many2many(
+        'setup.assist.github.repo', string='Select Repositories to Update',
+        help='Select the GitHub repositories you want to clone/pull updates for.'
+    )
+
     # --- Placeholder for other checks ---
     port_check_results = fields.Text(string="Network Port Check", readonly=True, default="Not implemented yet.")
     file_permissions_results = fields.Text(string="File Permissions Check", readonly=True, default="Not implemented yet.")
@@ -141,7 +147,6 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_dependency_results()
         self.general_message = "Dependency checks completed."
-        return self._reopen_wizard()
 
     # --- Database Checks --- (Keep existing methods)
     def _format_db_check_results(self):
@@ -159,7 +164,6 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_db_check_results()
         self.general_message = "Database checks completed."
-        return self._reopen_wizard()
 
     # --- Odoo.conf Checks --- (Keep existing methods)
     def _format_odoo_conf_results(self):
@@ -177,7 +181,6 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_odoo_conf_results()
         self.general_message = "Odoo.conf analysis completed."
-        return self._reopen_wizard()
 
     # --- Addon Python Dependency Checks & Installation --- (Keep existing methods)
     def _update_addon_req_ui_fields(self, scan_summary_lines=None, install_log_lines=None, status=None, packages_to_install_str=None):
@@ -220,13 +223,12 @@ class SetupAssistWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Critical error during addon dependency scan action: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"A critical error occurred during scan: {e}"], status='scanned_error')
-        return self._reopen_wizard()
 
     def action_install_addon_python_dependencies(self):
         self.ensure_one()
         if not self.packages_to_install_list:
             self._update_addon_req_ui_fields(install_log_lines=["No packages were marked for installation. Scan first."])
-            return self._reopen_wizard()
+            return
         self._update_addon_req_ui_fields(status='install_inprogress', install_log_lines=["Starting installation...\n"])
         packages_specs = [spec.strip() for spec in self.packages_to_install_list.split(';;;') if spec.strip()]
         try:
@@ -251,7 +253,6 @@ class SetupAssistWizard(models.TransientModel):
                 install_log_lines=[self.addon_req_install_log or "", f"\nA critical error occurred: {e}"],
                 status='install_failed'
             )
-        return self._reopen_wizard()
 
     # --- Log File Analysis (New Method) ---
     def action_load_and_analyze_logs(self):
@@ -267,7 +268,7 @@ class SetupAssistWizard(models.TransientModel):
             self.log_analysis_status = 'no_log_file'
             self.log_display_content = "Odoo logfile path ('logfile') is not configured in odoo.conf. Cannot read logs from file."
             self.log_diagnostic_hints = "Configure 'logfile' in odoo.conf to enable this feature."
-            return self._reopen_wizard()
+            return
 
         try:
             lines_to_fetch = self.log_lines_to_fetch if self.log_lines_to_fetch > 0 else 200 # Ensure positive
@@ -300,8 +301,6 @@ class SetupAssistWizard(models.TransientModel):
             self.log_diagnostic_hints = "Check Odoo server logs for more details."
             self.log_analysis_status = 'error_reading'
             
-        return self._reopen_wizard()
-
     # --- Run All Scans (Not installations) ---
     def action_run_all_scans(self):
         self.ensure_one()
@@ -326,4 +325,39 @@ class SetupAssistWizard(models.TransientModel):
             self._update_addon_req_ui_fields(scan_summary_lines=[f"Error during addon dependency scan: {e}"], status='scanned_error')
 
         self.general_message = "All environment scans completed. Review individual tabs. Log analysis is a manual action on its respective tab."
-        return self._reopen_wizard()
+
+    # --- GitHub Integration Actions ---
+    def action_update_github_repos_and_restart(self):
+        """ Clones or pulls selected/active GitHub repositories and restarts Odoo. """
+        self.ensure_one()
+        repos_to_update = self.github_repo_ids if self.github_repo_ids else self.env['setup.assist.github.repo'].search([('active', '=', True)])
+
+        if not repos_to_update:
+            self.general_message = _("No GitHub repositories selected or marked as Active to update.")
+            return
+
+        self.general_message = _(f"Starting update process for {len(repos_to_update)} GitHub repository(s)...\n")
+        all_success = True
+        log_messages = []
+
+        for repo in repos_to_update:
+            log_messages.append(f"\n--- Updating Repository: {repo.name} ({repo.repo_url}@{repo.branch}) ---")
+            success, message = repo.action_clone_or_pull()
+            log_messages.append(f"Status: {repo.last_git_status}")
+            log_messages.append(f"Log:\n{repo.last_git_log}")
+            if not success:
+                all_success = False
+                log_messages.append(_("\n!!! Git operation failed. Skipping Odoo restart for now."))
+
+        self.general_message += "\n".join(log_messages)
+
+        if all_success:
+            self.general_message += _("\n\nAll selected/active repositories updated successfully. Proceeding to restart Odoo service...")
+            # Call the existing restart action
+            restart_result = self.action_restart_odoo_service()
+            # The action_restart_odoo_service already updates general_message,
+            # but we can append the git status for clarity.
+            # Re-fetching the record might be necessary if action_restart_odoo_service commits changes
+            self.env.cache.invalidate()
+            updated_self = self.browse(self.id) # Re-fetch
+            updated_self.general_message = self.general_message + "\n\n-- Odoo Restart Status --\n" + updated_self.general_message
