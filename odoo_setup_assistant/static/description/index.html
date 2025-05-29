@@ -286,76 +286,64 @@
         }
 
         .screenshots-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 1.2rem;
             margin-top: 2rem;
             margin-bottom: 2rem;
-            max-width: 900px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
         .screenshot-card {
             background: #fff;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border-color);
-            padding: 0.8rem 0.8rem 0.7rem 0.8rem;
+            padding: 0.7rem 0.7rem 0.6rem 0.7rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 170px;
-            min-width: 140px;
-            max-width: 180px;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
             transition: box-shadow 0.3s, transform 0.3s;
         }
         .screenshot-card:hover {
             box-shadow: var(--shadow-lg);
-            transform: translateY(-4px) scale(1.03);
+            transform: translateY(-2px) scale(1.03);
         }
         .screenshot-card img {
-            max-width: 120px;
-            max-height: 90px;
-            border-radius: 6px;
+            max-width: 90px;
+            max-height: 70px;
+            border-radius: 5px;
             box-shadow: 0 2px 8px rgba(52,152,219,0.08);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             background: #f8f9fa;
             border: 1px solid #e3e8ee;
             object-fit: contain;
         }
         .screenshot-card .caption {
-            font-size: 0.98rem;
+            font-size: 0.93rem;
             color: var(--primary-color);
             text-align: center;
             font-weight: 600;
             margin-bottom: 0.1rem;
         }
         .screenshot-card .desc {
-            font-size: 0.89rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             text-align: center;
         }
         @media (max-width: 900px) {
             .screenshots-gallery {
-                max-width: 100%;
+                max-width: 98vw;
                 gap: 0.7rem;
-            }
-            .screenshot-card {
-                width: 38vw;
-                min-width: 120px;
-                max-width: 160px;
             }
         }
         @media (max-width: 600px) {
             .screenshots-gallery {
-                flex-direction: column;
-                align-items: center;
                 gap: 0.5rem;
-            }
-            .screenshot-card {
-                width: 90vw;
-                max-width: 180px;
             }
         }
     </style>
