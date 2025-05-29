@@ -18,7 +18,7 @@
     'application': True,
     'auto_install': False,
     'license': 'OPL-1',
-    'compatible_version': '18.0',
+    'compatible_version': '17.0',
     'images': ['static/description/cover.png'],
     # It's good practice to note external Python dependencies if your module *itself*
     # directly depends on something not standard in Odoo's core requirements.
