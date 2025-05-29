@@ -84,26 +84,33 @@
 
         .section {
             margin-bottom: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .section h2 {
             font-size: 2.2rem;
             color: var(--primary-color);
             border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-            display: inline-block;
-            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
 
-        .section h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        .section h2 .emoji {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .section p, .section ul, .section ol {
+            font-size: 1.08rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
         }
 
         .features-grid {
@@ -279,49 +286,73 @@
         }
 
         .screenshots-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 2rem;
             margin-top: 2rem;
             margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .screenshot-item {
-            background: #f4f8fb;
-            border-radius: 10px;
-            box-shadow: var(--shadow-sm);
-            padding: 1rem;
+        .screenshot-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 1.2rem 1.2rem 1rem 1.2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 260px;
             transition: box-shadow 0.3s, transform 0.3s;
         }
-        .screenshot-item:hover {
+        .screenshot-card:hover {
             box-shadow: var(--shadow-lg);
             transform: translateY(-6px) scale(1.03);
         }
-        .screenshot-item img {
+        .screenshot-card img {
             max-width: 100%;
-            max-height: 260px;
+            max-height: 180px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(52,152,219,0.08);
             margin-bottom: 0.7rem;
-            background: #fff;
+            background: #f8f9fa;
+            border: 1px solid #e3e8ee;
         }
-        .screenshot-item .caption {
-            font-size: 1rem;
+        .screenshot-card .caption {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .screenshot-card .desc {
+            font-size: 0.97rem;
             color: var(--text-secondary);
             text-align: center;
-            margin-top: 0.2rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
+        }
+        @media (max-width: 900px) {
+            .screenshots-gallery {
+                max-width: 100%;
+                gap: 1.2rem;
+            }
+            .screenshot-card {
+                width: 46vw;
+                min-width: 180px;
+                max-width: 98vw;
+            }
         }
         @media (max-width: 600px) {
             .screenshots-gallery {
-                grid-template-columns: 1fr;
+                flex-direction: column;
+                align-items: center;
                 gap: 1rem;
             }
-            .screenshot-item img {
-                max-height: 180px;
+            .screenshot-card {
+                width: 98vw;
+                max-width: 340px;
             }
         }
     </style>
@@ -419,12 +450,36 @@
         <div class="section" id="screenshots">
             <h2><span class="emoji">🖼️</span> Screenshots</h2>
             <div class="screenshots-gallery">
-                <div class="screenshot-item"><img src="Screen 1.png" alt="Screen 1"><div class="caption">Screen 1</div></div>
-                <div class="screenshot-item"><img src="Screen 2.png" alt="Screen 2"><div class="caption">Screen 2</div></div>
-                <div class="screenshot-item"><img src="Screen 3.png" alt="Screen 3"><div class="caption">Screen 3</div></div>
-                <div class="screenshot-item"><img src="Screen 4.png" alt="Screen 4"><div class="caption">Screen 4</div></div>
-                <div class="screenshot-item"><img src="Screen 5.png" alt="Screen 5"><div class="caption">Screen 5</div></div>
-                <div class="screenshot-item"><img src="Screen 6.png" alt="Screen 6"><div class="caption">Screen 6</div></div>
+                <div class="screenshot-card">
+                    <img src="Screen 1.png" alt="Screen 1">
+                    <div class="caption">Screen 1</div>
+                    <div class="desc">Main Dashboard Overview</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 2.png" alt="Screen 2">
+                    <div class="caption">Screen 2</div>
+                    <div class="desc">Environment Checks & Results</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 3.png" alt="Screen 3">
+                    <div class="caption">Screen 3</div>
+                    <div class="desc">Python & System Dependencies</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 4.png" alt="Screen 4">
+                    <div class="caption">Screen 4</div>
+                    <div class="desc">Database Health Analysis</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 5.png" alt="Screen 5">
+                    <div class="caption">Screen 5</div>
+                    <div class="desc">Log File Analysis</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screen 6.png" alt="Screen 6">
+                    <div class="caption">Screen 6</div>
+                    <div class="desc">GitHub Repository Management</div>
+                </div>
             </div>
         </div>
 
