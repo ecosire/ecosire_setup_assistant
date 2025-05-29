@@ -2,6 +2,12 @@
 from odoo import models, fields, api, _
 # from odoo.exceptions import UserError # Not used yet, but good for future
 import logging
+import platform
+import psutil
+import shutil
+import os
+import json
+from odoo import release as odoo_release
 
 _logger = logging.getLogger(__name__)
 
@@ -78,10 +84,29 @@ class SetupAssistWizard(models.TransientModel):
         ('empty_after_filter', 'No Logs Found Matching Filters')
     ], string="Log Analysis Status", default='not_run', readonly=True)
 
+    # --- GitHub Integration Fields ---
+    github_repo_ids = fields.Many2many(
+        'setup.assist.github.repo', string='Select Repositories to Update',
+        help='Select the GitHub repositories you want to clone/pull updates for.'
+    )
+
     # --- Placeholder for other checks ---
     port_check_results = fields.Text(string="Network Port Check", readonly=True, default="Not implemented yet.")
     file_permissions_results = fields.Text(string="File Permissions Check", readonly=True, default="Not implemented yet.")
 
+    system_info = fields.Text(string="System Information", compute="_compute_system_info")
+    system_cpu_percent = fields.Float(string="CPU Usage (%)", compute="_compute_system_info")
+    system_mem_percent = fields.Float(string="Memory Usage (%)", compute="_compute_system_info")
+    system_mem_total = fields.Char(string="Total Memory", compute="_compute_system_info")
+    system_mem_used = fields.Char(string="Used Memory", compute="_compute_system_info")
+    system_disk_percent = fields.Float(string="Disk Usage (%)", compute="_compute_system_info")
+    system_disk_total = fields.Char(string="Total Disk", compute="_compute_system_info")
+    system_disk_used = fields.Char(string="Used Disk", compute="_compute_system_info")
+    system_uptime = fields.Char(string="Uptime", compute="_compute_system_info")
+    system_os = fields.Char(string="OS", compute="_compute_system_info")
+    system_python = fields.Char(string="Python Version", compute="_compute_system_info")
+    system_odoo = fields.Char(string="Odoo Version", compute="_compute_system_info")
+    system_graph_data = fields.Text(string="System Graph Data (JSON)", compute="_compute_system_info")
 
     @api.model
     def default_get(self, fields_list):
@@ -141,7 +166,10 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_dependency_results()
         self.general_message = "Dependency checks completed."
+<<<<<<< HEAD
         return None
+=======
+>>>>>>> 18.0
 
     # --- Database Checks --- (Keep existing methods)
     def _format_db_check_results(self):
@@ -159,7 +187,10 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_db_check_results()
         self.general_message = "Database checks completed."
+<<<<<<< HEAD
         return None
+=======
+>>>>>>> 18.0
 
     # --- Odoo.conf Checks --- (Keep existing methods)
     def _format_odoo_conf_results(self):
@@ -177,7 +208,10 @@ class SetupAssistWizard(models.TransientModel):
         self.ensure_one()
         self._format_odoo_conf_results()
         self.general_message = "Odoo.conf analysis completed."
+<<<<<<< HEAD
         return None
+=======
+>>>>>>> 18.0
 
     # --- Addon Python Dependency Checks & Installation --- (Keep existing methods)
     def _update_addon_req_ui_fields(self, scan_summary_lines=None, install_log_lines=None, status=None, packages_to_install_str=None):
@@ -220,13 +254,20 @@ class SetupAssistWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Critical error during addon dependency scan action: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"A critical error occurred during scan: {e}"], status='scanned_error')
+<<<<<<< HEAD
         return None
+=======
+>>>>>>> 18.0
 
     def action_install_addon_python_dependencies(self):
         self.ensure_one()
         if not self.packages_to_install_list:
             self._update_addon_req_ui_fields(install_log_lines=["No packages were marked for installation. Scan first."])
+<<<<<<< HEAD
             return None
+=======
+            return
+>>>>>>> 18.0
         self._update_addon_req_ui_fields(status='install_inprogress', install_log_lines=["Starting installation...\n"])
         packages_specs = [spec.strip() for spec in self.packages_to_install_list.split(';;;') if spec.strip()]
         try:
@@ -251,7 +292,10 @@ class SetupAssistWizard(models.TransientModel):
                 install_log_lines=[self.addon_req_install_log or "", f"\nA critical error occurred: {e}"],
                 status='install_failed'
             )
+<<<<<<< HEAD
         return None
+=======
+>>>>>>> 18.0
 
     # --- Log File Analysis (New Method) ---
     def action_load_and_analyze_logs(self):
@@ -265,7 +309,12 @@ class SetupAssistWizard(models.TransientModel):
             self.log_analysis_status = 'no_log_file'
             self.log_display_content = "Odoo logfile path ('logfile') is not configured in odoo.conf. Cannot read logs from file."
             self.log_diagnostic_hints = "Configure 'logfile' in odoo.conf to enable this feature."
+<<<<<<< HEAD
             return None
+=======
+            return
+
+>>>>>>> 18.0
         try:
             lines_to_fetch = self.log_lines_to_fetch if self.log_lines_to_fetch > 0 else 200 # Ensure positive
             log_lines, status_key = analyzer.get_filtered_log_lines(
@@ -292,8 +341,12 @@ class SetupAssistWizard(models.TransientModel):
             self.log_display_content = f"An unexpected error occurred while analyzing logs: {str(e)}"
             self.log_diagnostic_hints = "Check Odoo server logs for more details."
             self.log_analysis_status = 'error_reading'
+<<<<<<< HEAD
         return None
 
+=======
+            
+>>>>>>> 18.0
     # --- Run All Scans (Not installations) ---
     def action_run_all_scans(self):
         self.ensure_one()
@@ -316,6 +369,7 @@ class SetupAssistWizard(models.TransientModel):
             _logger.error(f"Error during 'Run All Scans' for addon dependencies: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"Error during addon dependency scan: {e}"], status='scanned_error')
         self.general_message = "All environment scans completed. Review individual tabs. Log analysis is a manual action on its respective tab."
+<<<<<<< HEAD
         return None
 
     def action_install_all_missing_dependencies(self):
@@ -352,3 +406,92 @@ class SetupAssistWizard(models.TransientModel):
             if result.get('commands_tried'):
                 self.general_message += '\nCommands tried:\n' + '\n'.join(result['commands_tried'])
         return None
+=======
+
+    # --- GitHub Integration Actions ---
+    def action_update_github_repos_and_restart(self):
+        """ Clones or pulls selected/active GitHub repositories and restarts Odoo. """
+        self.ensure_one()
+        repos_to_update = self.github_repo_ids if self.github_repo_ids else self.env['setup.assist.github.repo'].search([('active', '=', True)])
+
+        if not repos_to_update:
+            self.general_message = _("No GitHub repositories selected or marked as Active to update.")
+            return
+
+        self.general_message = _(f"Starting update process for {len(repos_to_update)} GitHub repository(s)...\n")
+        all_success = True
+        log_messages = []
+
+        for repo in repos_to_update:
+            log_messages.append(f"\n--- Updating Repository: {repo.name} ({repo.repo_url}@{repo.branch}) ---")
+            success, message = repo.action_clone_or_pull()
+            log_messages.append(f"Status: {repo.last_git_status}")
+            log_messages.append(f"Log:\n{repo.last_git_log}")
+            if not success:
+                all_success = False
+                log_messages.append(_("\n!!! Git operation failed. Skipping Odoo restart for now."))
+
+        self.general_message += "\n".join(log_messages)
+
+        if all_success:
+            self.general_message += _("\n\nAll selected/active repositories updated successfully. Proceeding to restart Odoo service...")
+            # Call the existing restart action
+            restart_result = self.action_restart_odoo_service()
+            # The action_restart_odoo_service already updates general_message,
+            # but we can append the git status for clarity.
+            # Re-fetching the record might be necessary if action_restart_odoo_service commits changes
+            self.env.cache.invalidate()
+            updated_self = self.browse(self.id) # Re-fetch
+            updated_self.general_message = self.general_message + "\n\n-- Odoo Restart Status --\n" + updated_self.general_message
+
+    def action_restart_odoo_service(self):
+        """Restart the Odoo service. Placeholder for actual restart logic."""
+        self.ensure_one()
+        # You can implement actual restart logic here, e.g., call a shell command or use a helper model
+        self.general_message = _("Odoo service restart requested (placeholder). If you want to implement actual restart logic, add it here.")
+        return None
+
+    def _compute_system_info(self):
+        for rec in self:
+            try:
+                cpu_percent = psutil.cpu_percent(interval=0.5)
+                mem = psutil.virtual_memory()
+                disk = shutil.disk_usage("/")
+                uptime = os.popen('uptime -p').read().strip() if hasattr(os, 'popen') else "N/A"
+                rec.system_info = (
+                    f"OS: {platform.system()} {platform.release()}\n"
+                    f"CPU Usage: {cpu_percent}%\n"
+                    f"Memory: {mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB ({mem.percent}%)\n"
+                    f"Disk: {disk.used // (1024**3)}GB / {disk.total // (1024**3)}GB\n"
+                    f"Uptime: {uptime}\n"
+                    f"Python: {platform.python_version()}\n"
+                    f"Odoo: {getattr(odoo_release, 'version', 'N/A')}\n"
+                )
+                rec.system_cpu_percent = cpu_percent
+                rec.system_mem_percent = mem.percent
+                rec.system_mem_total = f"{mem.total // (1024**2)} MB"
+                rec.system_mem_used = f"{mem.used // (1024**2)} MB"
+                rec.system_disk_percent = (disk.used / disk.total) * 100 if disk.total else 0
+                rec.system_disk_total = f"{disk.total // (1024**3)} GB"
+                rec.system_disk_used = f"{disk.used // (1024**3)} GB"
+                rec.system_uptime = uptime
+                rec.system_os = f"{platform.system()} {platform.release()}"
+                rec.system_python = platform.python_version()
+                rec.system_odoo = getattr(odoo_release, 'version', 'N/A')
+                # For chart.js or similar
+                rec.system_graph_data = json.dumps({
+                    'cpu': cpu_percent,
+                    'mem': mem.percent,
+                    'disk': rec.system_disk_percent,
+                })
+            except Exception as e:
+                rec.system_info = f"Error fetching system info: {e}"
+                rec.system_graph_data = json.dumps({'cpu': 0, 'mem': 0, 'disk': 0})
+
+    def action_scan_system_info(self):
+        """Trigger recomputation of system information fields."""
+        self.ensure_one()
+        # The fields are computed, so we can just force recompute
+        self._compute_system_info()
+        self.general_message = _("System information scan completed.")
+>>>>>>> 18.0
