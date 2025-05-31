@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Odoo Setup Assistant',
-    'module_name': 'odoo_setup_assistant',
     'version': '3.0.2', # Incremented version for new features
     'summary': 'Diagnose Odoo setup, configuration, dependencies, and manage addon Python requirements.',
     'description': 'static/description/index.html',
@@ -22,7 +21,6 @@
     'application': True,
     'auto_install': False,
     'license': 'OPL-1',
-    'compatible_version': '17.0',
     'images': ['static/description/cover.png'],
     # It's good practice to note external Python dependencies if your module *itself*
     # directly depends on something not standard in Odoo's core requirements.
