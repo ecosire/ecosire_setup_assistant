@@ -1,453 +1,330 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odoo Setup Assistant</title>
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --primary-dark: #2980b9;
-            --secondary-color: #ecf0f1;
-            --text-primary: #2c3e50;
-            --text-secondary: #34495e;
-            --border-color: #ddd;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --shadow-lg: 0 6px 15px rgba(0,0,0,0.12);
-        }
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Odoo Setup Assistant App Description</title>
+    <style type="text/css">
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f8f9fa;
-            color: var(--text-primary);
+            color: #333;
             line-height: 1.6;
-            font-size: 16px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header {
-            text-align: center;
-            padding: 3rem 0 2rem;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            z-index: 0;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            color: #fff;
-            margin: 0;
-            position: relative;
-            z-index: 1;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header .module-emoji {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .section {
-            margin-bottom: 4rem;
             max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 20px auto;
+            padding: 25px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .section h2 {
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+            margin-top: 0;
         }
 
-        .section h2 .emoji {
-            font-size: 1.5rem;
-            margin-right: 0.5rem;
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #3498db;
         }
 
-        .section p, .section ul, .section ol {
-            font-size: 1.08rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.2rem;
+        h2 {
+            font-size: 2em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 20px;
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
+        h3 {
+            font-size: 1.4em;
+            color: #2980b9;
+            margin-top: 25px;
+            margin-bottom: 10px;
         }
 
-        .feature-card {
-            background: linear-gradient(145deg, var(--secondary-color), #fff);
-            padding: 2rem;
-            border-radius: 12px;
-            border-left: 6px solid var(--primary-color);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), transparent);
-            z-index: 0;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin: 0 0 1.2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .feature-card h3 .emoji {
-            font-size: 1.2rem;
-            margin-right: 0.8rem;
-            vertical-align: middle;
-        }
-
-        .feature-card p {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            position: relative;
-            z-index: 1;
+        p,
+        li {
+            font-size: 1em;
+            color: #34495e;
+            margin-bottom: 10px;
         }
 
         ul {
-            list-style: none;
-            padding-left: 0;
-            margin: 1.5rem 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+        
+        .feature-list li {
+            padding-left: 10px;
+            margin-bottom: 12px;
+            font-size: 1.05em;
         }
 
-        ul li {
-            background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M4.5%209L1.5%206L2.205%205.295L4.5%207.59L9.795%202.295L10.5%203L4.5%209Z%22%20fill%3D%22%233498db%22/%3E%3C/svg%3E') no-repeat left center;
-            padding-left: 24px;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            color: var(--text-secondary);
+        .feature-list strong {
+            color: #3498db; /* Odoo's primary blue */
         }
 
-        .code {
-            background-color: #e9ecef;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin: 0.25rem 0.5rem;
-            box-shadow: var(--shadow-sm);
+        .screenshot-gallery {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Basic grid for standalone */
+            gap: 20px;
         }
 
-        .footer {
+        .screenshot-card {
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
             text-align: center;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-color);
-            margin-top: 4rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .screenshot-card:hover { /* May not work in app store */
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .footer p {
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 1.5rem;
+        .screenshot-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
         }
 
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+        .screenshot-card .caption {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: bold;
+            min-height: 30px; /* Ensure consistent caption area height */
         }
 
-        .footer a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
+        .code-snippet {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            color: #c7254e; /* Bootstrap's code color */
         }
 
+        .pro-tip {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3; /* Blue accent */
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .pro-tip p {
+            margin-bottom: 5px;
+        }
+
+        .contact-section p, .developer-section p {
+            margin-bottom: 5px;
+        }
         .whatsapp-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            display: inline-block;
             background-color: #25D366;
-            color: white;
-            padding: 1rem 2rem;
+            color: white !important; /* Important to override link styles */
+            padding: 10px 20px;
             border-radius: 25px;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
-            margin-top: 1.5rem;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
         }
-
-        .whatsapp-button:hover {
+        .whatsapp-button:hover { /* May not work in app store */
             background-color: #1DA851;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            color: white !important;
+        }
+        .whatsapp-button img { /* For SVG icon, if allowed. Otherwise, text only. */
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
-        .whatsapp-button img {
-            width: 24px;
-            height: 24px;
-            margin-right: 0.8rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header .module-emoji {
-                font-size: 3rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .feature-card {
-                padding: 1.5rem;
-            }
-
-            .section h2 {
-                font-size: 2rem;
-            }
-
-            .whatsapp-button {
-                width: 100%;
-                max-width: 300px;
-                margin: 1.5rem auto 0;
-            }
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        .screenshots-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1.2rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .screenshot-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-color);
-            padding: 0.7rem 0.7rem 0.6rem 0.7rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-            transition: box-shadow 0.3s, transform 0.3s;
-        }
-        .screenshot-card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px) scale(1.03);
-        }
-        .screenshot-card img {
-            max-width: 90px;
-            max-height: 70px;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px rgba(52,152,219,0.08);
-            margin-bottom: 0.4rem;
-            background: #f8f9fa;
-            border: 1px solid #e3e8ee;
-            object-fit: contain;
-        }
-        .screenshot-card .caption {
-            font-size: 0.93rem;
-            color: var(--primary-color);
-            text-align: center;
-            font-weight: 600;
-            margin-bottom: 0.1rem;
-        }
-        .screenshot-card .desc {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .text-center {
             text-align: center;
         }
-        @media (max-width: 900px) {
-            .screenshots-gallery {
-                max-width: 98vw;
-                gap: 0.7rem;
-            }
-        }
-        @media (max-width: 600px) {
-            .screenshots-gallery {
-                gap: 0.5rem;
-            }
-        }
+
+        /* Odoo App Store specific consideration:
+           The store often uses <section class="oe_container">.
+           If you can wrap your content in that, it might inherit some base styling.
+           The HTML below is generic.
+        */
+
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="module-emoji">🛠️</div>
-            <h1>Odoo Setup Assistant</h1>
-            <p>Your comprehensive diagnostic and configuration toolkit for Odoo environments.</p>
-        </div>
+    <div class="container" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 900px; margin: 20px auto; padding: 25px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); color: #333; line-height: 1.6;">
 
-        <div class="section" id="introduction">
-            <p style="font-size: 1.1em; text-align: center; margin-bottom: 30px;">
-                The <strong>Odoo Setup Assistant</strong> is an essential module for developers, administrators, and consultants. It streamlines environment verification, dependency management, and configuration analysis, ensuring your Odoo instance runs smoothly and efficiently.
-            </p>
-        </div>
+        <h1 style="font-size: 2.5em; text-align: center; margin-bottom: 10px; color: #3498db;">🛠️ Odoo Setup Assistant</h1>
+        <p style="text-align: center; font-size: 1.2em; color: #555; margin-bottom: 30px;">
+            Your comprehensive diagnostic and configuration toolkit for Odoo environments. Stop guessing, start knowing!
+        </p>
 
-        <div class="section" id="features">
-            <h2><span class="emoji">✨</span> Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3><span class="emoji">🐍</span> Python & System Dependencies Check</h3>
-                    <p>Automatically scans for required Python libraries and system-level executables (like wkhtmltopdf, psql), highlighting any missing components critical for Odoo's operation and specific module functionalities.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span class="emoji">📦</span> Addon Python Requirements Management</h3>
-                    <p>Scans all custom and community addons for <code class="code">requirements.txt</code> files. Lists missing Python packages and provides a one-click option to install them directly into your Odoo environment.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span class="emoji">💾</span> Database Health Analysis</h3>
-                    <p>Verifies database connection parameters from <code class="code">odoo.conf</code>, attempts direct PostgreSQL server connection, and checks Odoo's current database session to ensure robust connectivity and proper configuration.</p>
-                </div>
-                <div class="feature-card">
-                    <h3><span class="emoji">⚙️</span> Odoo.conf Deep Scan</h3>
-                    <p>Analyzes your <code class="code">odoo.conf</code> file for critical path validations (addons_path, data_dir), performance settings (workers, limits), security configurations (admin_passwd, list_db), and common misconfigurations or typos.</p>
-                </div>
-                 <div class="feature-card">
-                    <h3><span class="emoji">📄</span> Log File Analysis & Configuration</h3>
-                    <p>Provides tools to fetch, filter (by level, keyword), and display recent log entries. Includes diagnostic hints for common errors. Allows setting a custom log file path for analysis, overriding the <code class="code">odoo.conf</code> default for targeted troubleshooting.</p>
-                </div>
-                 <div class="feature-card">
-                    <h3><span class="emoji">🛠️</span> Automated Dependency Installation</h3>
-                    <p>Offers a convenient action to attempt automatic installation of identified missing Python libraries and system dependencies directly from the Odoo interface (requires appropriate server permissions).</p>
-                </div>
-                 <div class="feature-card">
-                    <h3><span class="emoji">🔄</span> Odoo Service Restart</h3>
-                    <p>Provides a direct button within the assistant to safely initiate a restart of the Odoo service, useful after installing new dependencies or applying configuration changes (requires appropriate server permissions).</p>
-                </div>
-                 <div class="feature-card">
-                    <h3><span class="emoji">📊</span> User-Friendly Interface</h3>
-                    <p>All checks and actions are available within a clean, tabbed Odoo interface, making it easy to navigate and interpret results. Supports opening in the main Odoo window for a full-view experience.</p>
-                </div>
-                 <div class="feature-card">
-                    <h3><span class="emoji">🔗</span> GitHub Repository Management</h3>
-                    <p>Configure GitHub repositories (public or private with PAT) to easily clone or pull module updates directly into your Odoo addons path from the interface. Automate code deployment for smoother development workflows.</p>
-                </div>
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Overview 🌟
+        </h2>
+        <p style="font-size: 1em; color: #34495e; margin-bottom: 10px;">
+            Tired of environment-related headaches with your Odoo instances? The <strong>Odoo Setup Assistant</strong> by Ecosire is an indispensable module designed for Odoo developers, administrators, and technical consultants. It streamlines environment verification, automates dependency management, and provides in-depth configuration analysis. Ensure your Odoo instances run smoothly, efficiently, and with fewer surprises from day one!
+        </p>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Key Features at a Glance ✨
+        </h2>
+        <ul class="feature-list" style="padding-left: 0; list-style-type: none;">
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">🐍 Comprehensive Dependency Checks:</strong> Automatically scans for required Python libraries and essential system-level executables (e.g., <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">wkhtmltopdf</code>, <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">psql</code>). Instantly identify missing components critical for Odoo core operations and specific module functionalities.
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">📦 Addon Requirements Management:</strong> Intelligently scans all custom and community addons for <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">requirements.txt</code> files. Lists any missing Python packages and offers a <strong>one-click option to install them</strong> directly into your Odoo environment (server permissions required).
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">💾 Database Health Analysis:</strong> Verifies database connection parameters from <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">odoo.conf</code>, attempts a direct PostgreSQL server connection, and checks Odoo's current database session. Ensure robust connectivity and pinpoint configuration issues.
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">⚙️ Odoo.conf Deep Scan:</strong> Thoroughly analyzes your <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">odoo.conf</code> file. Validates critical paths (<code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">addons_path</code>, <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">data_dir</code>), reviews performance settings (workers, limits), checks security configurations (<code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">admin_passwd</code>, <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">list_db</code>), and flags common misconfigurations or typos.
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">📄 Advanced Log File Analysis:</strong> Fetch, filter (by level, keyword), and display recent log entries with ease. Includes diagnostic hints for common errors. Supports custom log file paths for targeted troubleshooting beyond <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">odoo.conf</code> defaults.
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">🛠️ Automated Dependency Installation:</strong> One-click action to attempt automatic installation of identified missing Python libraries and system dependencies directly from the Odoo interface (server permissions required).
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">🔄 Effortless Odoo Service Restart:</strong> A convenient button within the assistant to safely initiate an Odoo service restart – perfect after installing new dependencies or applying configuration changes (server permissions required).
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">🔗 GitHub Repository Management:</strong> Configure GitHub repositories (public or private with PAT) to easily clone or pull module updates directly into your Odoo addons path from the interface. Streamline your development and deployment workflows.
+            </li>
+            <li style="padding-left: 10px; margin-bottom: 15px; font-size: 1em; background-color: #f8f9fa; padding:10px; border-radius:4px; border-left: 3px solid #3498db;">
+                <strong style="color: #2980b9;">📊 User-Friendly Interface:</strong> All checks and actions are presented within a clean, intuitive, tabbed Odoo interface. Easily navigate and interpret results, with support for a full-view experience.
+            </li>
+        </ul>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Visual Walkthrough: See the Assistant in Action! 📸
+        </h2>
+        <p style="font-size: 1em; color: #34495e; margin-bottom: 20px;">
+            Below are some snapshots of the Odoo Setup Assistant, giving you a glimpse into its powerful and easy-to-use interface.
+        </p>
+
+        <div class="screenshot-gallery" style="margin-top: 20px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_1.png_URL" alt="Main Dashboard Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">Main Dashboard: Quick environment overview.</p>
+            </div>
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_2.png_URL" alt="Python & System Dependencies Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">Python & System Dependencies Check.</p>
+            </div>
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_3.png_URL" alt="Addon Requirements Management Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">Addon Python Requirements Management.</p>
+            </div>
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_4.png_URL" alt="Database & Odoo.conf Insights Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">Database Health & Odoo.conf Scan.</p>
+            </div>
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_5.png_URL" alt="Log File Analysis Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">Integrated Log File Analysis.</p>
+            </div>
+            <div class="screenshot-card" style="background-color: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                <img src="REPLACE_WITH_Screen_6.png_URL" alt="GitHub Integration Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ccc;" />
+                <p class="caption" style="font-size: 0.9em; color: #555; font-weight: bold; min-height: 30px;">GitHub Repository Management.</p>
             </div>
         </div>
+         <p style="text-align:center; font-size:0.8em; color:#777;"><em>(Actual interface may vary slightly based on Odoo version and theme)</em></p>
 
-        <div class="section" id="who-for">
-            <h2><span class="emoji">🎯</span> Who is it for?</h2>
-            <ul>
-                <li>Odoo Developers needing rapid environment validation.</li>
-                <li>System Administrators maintaining Odoo instances.</li>
-                <li>Technical Consultants provisioning or troubleshooting client setups.</li>
-                <li>Teams managing multiple Odoo versions and configurations.</li>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Why Choose Odoo Setup Assistant? 🤔
+        </h2>
+        <ul style="padding-left: 20px; list-style-type: disc;">
+            <li style="margin-bottom: 8px; font-size: 1em;"><strong>Save Time & Reduce Errors:</strong> Proactively identify and fix environment issues before they impact your operations.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;"><strong>Simplify Odoo Management:</strong> Centralize crucial checks and configurations in one easy-to-use tool.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;"><strong>Boost Developer Productivity:</strong> Quickly validate development environments and manage dependencies.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;"><strong>Ensure Stability & Performance:</strong> Optimize your Odoo setup based on thorough analysis and best practices.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;"><strong>Empower Your Team:</strong> Provides clear diagnostics for both technical and semi-technical users.</li>
+        </ul>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Perfect For: 🎯
+        </h2>
+        <ul style="padding-left: 20px; list-style-type: disc;">
+            <li style="margin-bottom: 8px; font-size: 1em;">Odoo Developers needing rapid environment validation.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">System Administrators maintaining Odoo instances.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Technical Consultants provisioning or troubleshooting client setups.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Teams managing multiple Odoo versions and configurations.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Anyone looking to ensure their Odoo setup is robust and reliable.</li>
+        </ul>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Easy Installation 📂
+        </h2>
+        <ol style="padding-left: 20px;">
+            <li style="margin-bottom: 8px; font-size: 1em;">Clone or download the <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">odoo_setup_assistant</code> module.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Place it into your Odoo <code style="background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; color: #c7254e;">addons</code> directory.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Restart your Odoo server.</li>
+            <li style="margin-bottom: 8px; font-size: 1em;">Navigate to 'Apps' in Odoo, search for "Odoo Setup Assistant", and click 'Activate'.</li>
+        </ol>
+
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Pro-Tip for Optimal Use 📌
+        </h2>
+        <div class="pro-tip" style="background-color: #e7f3fe; border-left: 4px solid #2196F3; padding: 15px 20px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin-bottom: 5px; font-size: 1em; color: #34495e;">Regularly run the Odoo Setup Assistant:</p>
+            <ul style="padding-left: 20px; list-style-type: square; margin-top:5px;">
+                <li style="margin-bottom: 5px; font-size: 1em; color: #34495e;">After server updates.</li>
+                <li style="margin-bottom: 5px; font-size: 1em; color: #34495e;">Following new module installations.</li>
+                <li style="margin-bottom: 5px; font-size: 1em; color: #34495e;">When making configuration changes.</li>
+                <li style="margin-bottom: 5px; font-size: 1em; color: #34495e;">Consider integrating checks into your CI/CD pipeline for automated environment validation.</li>
             </ul>
+            <p style="margin-top:10px; font-size: 1em; color: #34495e;">This proactive approach helps you catch potential issues early and maintain a healthy Odoo ecosystem.</p>
         </div>
 
-        <div class="section" id="installation">
-            <h2><span class="emoji">📂</span> Installation</h2>
-            <p>
-                1. Clone or download the <code class="code">odoo_setup_assistant</code> module.
-            </p>
-            <p>
-                2. Place it into your Odoo <code class="code">addons</code> directory.
-            </p>
-            <p>
-                3. Restart your Odoo server.
-            </p>
-            <p>
-                4. Navigate to 'Apps' in Odoo, search for "Odoo Setup Assistant", and click 'Activate'.
-            </p>
-        </div>
-        
-        <div class="section" id="pro-tip">
-            <h2><span class="emoji">📌</span> Pro Tip</h2>
-            <p>
-                Regularly use the Odoo Setup Assistant after server updates, new module installations, or configuration changes to proactively identify potential issues. Integrate checks into your CI/CD pipeline for automated environment validation.
-            </p>
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Developed with Passion by Ecosire 🚀
+        </h2>
+        <div class="developer-section" style="text-align: center; padding: 15px; background-color:#f8f9fa; border-radius: 6px;">
+            <p style="margin-bottom: 5px; font-size: 1em; color: #34495e;">The Odoo Setup Assistant is proudly developed by <strong>Ecosire (PRIVATE) LIMITED</strong>.</p>
+            <p style="margin-bottom: 5px; font-size: 1em; color: #34495e;">We specialize in:</p>
+            <p style="margin-bottom: 5px; font-size: 1em; color: #34495e;">AI Automation | Custom ERP Solutions (Odoo Experts!) | Growth Technologies</p>
+            <p style="margin-bottom: 5px; font-size: 1em; color: #34495e;">We are committed to providing high-quality tools that enhance your Odoo experience.</p>
         </div>
 
-        <div class="footer">
-            <p>
-                Developed by <strong>Ecosire (PRIVATE) LIMITED</strong>
+        <h2 style="font-size: 1.8em; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-top: 30px; margin-bottom: 20px; color: #2c3e50;">
+            Need Help or Have Questions? 💬
+        </h2>
+        <div class="contact-section" style="text-align: center; padding: 15px;">
+            <p style="margin-bottom: 10px; font-size: 1em;">
+                <strong>Visit our Website:</strong> <a href="https://www.ecosire.com/" target="_blank" style="color: #3498db; text-decoration: none;">https://www.ecosire.com/</a>
             </p>
-            <p>AI Automation, ERP Solutions, and Growth Technologies.</p>
-            <p>
-                <a href="https://www.ecosire.com/" target="_blank">Visit Ecosire.com</a>
-            </p>
-            <a href="https://wa.me/923130168262" class="whatsapp-button" target="_blank">
+            <a href="https://wa.me/923130168262" target="_blank" class="whatsapp-button" style="display: inline-block; background-color: #25D366; color: white !important; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: bold; margin-top: 10px; font-size:1em;">
+                <img src="data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%3E%3Cpath%20d%3D%22M.057%2024l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556%205.338-11.891%2011.893-11.891%203.181.001%206.167%201.24%208.413%203.488%202.245%202.248%203.487%205.235%203.487%208.413%200%206.557-5.338%2011.892-11.894%2011.892-1.99%200-3.903-.52-5.586-1.457l-6.162%201.687zm6.487-5.54l-.297-.186c-1.473-.924-2.363-2.397-2.808-4.058-.428-1.6-.36-3.232.2-4.746.536-1.44%201.493-2.689%202.789-3.648%201.264-.954%202.767-1.526%204.358-1.6.011-.001.023-.001.034-.001.043%200%20.085.001.128.002%201.658.028%203.259.531%204.62%201.43%201.383.92%202.493%202.148%203.225%203.595.718%201.416%201.074%202.997%201.028%204.585-.054%201.716-.67%203.348-1.733%204.743-1.038%201.359-2.428%202.382-4.012%202.962-.342.12-.696.219-1.059.294l-.221.047c-.683.142-1.374.221-2.073.221-1.69%200-3.306-.551-4.688-1.527l-.238-.169zm9.231-7.106c-.272-.442-.994-.641-1.39-.684-.248-.026-.506-.032-.755-.032-.238%200-.502.004-.73.031-.549.062-1.125.301-1.533.712-.216.216-.432.432-.647.647-.494.494-1.011.964-1.581%201.369-.058.04-.115.08-.173.122-.351.253-.688.517-1.004.797-.168.15-.336.3-.504.451-.191.168-.382.336-.573.504-.604.547-1.035%201.037-1.328%201.668-.035.074-.069.148-.104.222-.043.083-.087.166-.13.249-.031.06-.062.12-.093.18-.078.15-.156.3-.234.451-.032.06-.064.12-.096.18-.043.083-.087.166-.13.249-.031.06-.062.12-.093.18-.078.15-.156.3-.234.451-.093.18-.186.36-.279.54-.109.211-.218.422-.327.633-.123.242-.246.484-.369.726-.191.382-.382.764-.573%201.146l-.04.08c-.22.46-.32.98-.29%201.51.03.58.27%201.11.69%201.55.47.48.98.79%201.53.98%20.71.24%201.47.25%202.18.06.75-.2%201.41-.63%201.95-1.18.45-.47.82-.99%201.12-1.56.26-.49.46-1.02.59-1.57.02-.08.04-.16.06-.24l.02-.08c.02-.08.04-.16.06-.24.07-.28.11-.57.11-.86s-.04-.58-.11-.86c-.02-.08-.04-.16-.06-.24l-.02-.08c-.02-.08-.04-.16-.06-.24-.13-.55-.33-1.08-.59-1.57-.3-.57-.67-1.09-1.12-1.56-.54-.55-1.2-.98-1.95-1.18-.06-.01-.12-.02-.18-.03z%22/%3E%3C/svg%3E" alt="WhatsApp Icon" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;"/>
                 Contact us on WhatsApp
             </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="font-size: 0.9em; color: #777;">&copy; 2024-2025 Ecosire (PRIVATE) LIMITED. All Rights Reserved.</p>
         </div>
     </div>
 </body>
