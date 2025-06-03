@@ -21,7 +21,7 @@ from ..checkers import log_analyzer # Import the new log analyzer
 
 class SetupAssistWizard(models.TransientModel):
     _name = 'setup.assist.wizard'
-    _description = 'Odoo Setup Assistant Wizard'
+    _description = 'Ecosire Setup Assistant Wizard'
 
     # --- General ---
     general_message = fields.Text(string="Status Messages", readonly=True)

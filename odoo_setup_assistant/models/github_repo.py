@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class SetupAssistGithubRepo(models.Model):
     _name = 'setup.assist.github.repo'
-    _description = 'Odoo Setup Assistant Github Repository'
+    _description = 'Ecosire Setup Assistant Github Repository'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'sequence, name'
 
@@ -60,13 +60,13 @@ class SetupAssistGithubRepo(models.Model):
             process = subprocess.run(command_list, cwd=cwd, capture_output=True, text=True, check=True, shell=False)
             self.last_git_log = process.stdout + process.stderr
             self.last_git_status = 'success'
-            self.message_post(body=_(f'Git command executed successfully for {self.name}.'))
+            self.message_post(body=_('Git command executed successfully for %s.') % self.name)
             _logger.info(f"Git command successful for {self.name}")
             return True, process.stdout.strip()
         except subprocess.CalledProcessError as e:
             self.last_git_log = e.stdout + e.stderr
             self.last_git_status = 'error'
-            error_message = _(f'Git command failed for {self.name} (Exit Code {e.returncode}):\n{e.stdout}\n{e.stderr}')
+            error_message = _('Git command failed for %s (Exit Code %s):\n%s\n%s') % (self.name, e.returncode, e.stdout, e.stderr)
             self.message_post(body=error_message)
             _logger.error(f"Git command failed for {self.name}: {e.stdout} {e.stderr}")
             return False, error_message
@@ -80,7 +80,7 @@ class SetupAssistGithubRepo(models.Model):
         except Exception as e:
             self.last_git_log = str(e)
             self.last_git_status = 'error'
-            error_message = _(f'An unexpected error occurred during git operation for {self.name}: {e}')
+            error_message = _('An unexpected error occurred during git operation for %s: %s') % (self.name, e)
             self.message_post(body=error_message)
             _logger.exception(f"Unexpected error during git operation for {self.name}")
             return False, error_message
@@ -112,7 +112,7 @@ class SetupAssistGithubRepo(models.Model):
                  os.makedirs(parent_dir)
                  _logger.info(f"Created parent directory: {parent_dir}")
              except OSError as e:
-                 error_message = _(f"Error creating parent directory {parent_dir}: {e}")
+                 error_message = _('Error creating parent directory %s: %s') % (parent_dir, e)
                  self.last_git_log = str(e)
                  self.last_git_status = 'error'
                  self.message_post(body=error_message)
@@ -143,7 +143,7 @@ class SetupAssistGithubRepo(models.Model):
             else:
                 # Path exists but is not a git repo, error out or attempt to clone into it?
                 # Error out to prevent data loss or unexpected behavior.
-                error_message = _(f"Target path {target_path} exists but is not a Git repository.")
+                error_message = _('Target path %s exists but is not a Git repository.') % target_path
                 self.last_git_log = error_message
                 self.last_git_status = 'error'
                 self.message_post(body=error_message)
