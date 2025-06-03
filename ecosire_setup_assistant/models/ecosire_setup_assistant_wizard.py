@@ -159,7 +159,6 @@ class SetupAssistWizard(models.TransientModel):
             for item in sys_missing: sys_lines.append(f"- {item['name']} (Hint: {item.get('hint', 'N/A')})")
         else: sys_lines.append("✅ All checked system dependencies seem available.")
         self.system_dependencies_results = "\n".join(sys_lines)
-
         self.overall_dependency_status = 'issues' if py_missing or sys_missing else 'ok'
 
     def action_run_dependency_checks(self):
@@ -217,7 +216,7 @@ class SetupAssistWizard(models.TransientModel):
         self._update_addon_req_ui_fields(
             scan_summary_lines=["Scanning addon dependencies..."],
             install_log_lines=["No installation performed yet."],
-            status='scanned_error', 
+            status='scanned_error',
             packages_to_install_str=""
         )
         try:
@@ -276,30 +275,24 @@ class SetupAssistWizard(models.TransientModel):
     # --- Log File Analysis (New Method) ---
     def action_load_and_analyze_logs(self):
         self.ensure_one()
-        
         analyzer = log_analyzer.LogAnalyzer()
         self.log_file_path_display = analyzer.log_file_path or "Odoo logfile not configured or found."
         self.log_display_content = f"Loading logs from: {self.log_file_path_display}...\n"
         self.log_diagnostic_hints = "Analyzing..."
         self.log_analysis_status = 'not_run' # Temp status
-
         if not analyzer.log_file_path:
             self.log_analysis_status = 'no_log_file'
             self.log_display_content = "Odoo logfile path ('logfile') is not configured in odoo.conf. Cannot read logs from file."
             self.log_diagnostic_hints = "Configure 'logfile' in odoo.conf to enable this feature."
             return
-
         try:
             lines_to_fetch = self.log_lines_to_fetch if self.log_lines_to_fetch > 0 else 200 # Ensure positive
-            
             log_lines, status_key = analyzer.get_filtered_log_lines(
                 num_lines=lines_to_fetch,
                 level_filter=self.log_level_filter if self.log_level_filter != 'ALL' else None,
                 keyword_filter=self.log_keyword_filter or None
             )
-            
             self.log_analysis_status = status_key # 'success', 'no_log_file', 'error_reading', 'empty_after_filter'
-            
             if status_key == 'success':
                 self.log_display_content = "\n".join(log_lines) if log_lines else "No log entries found (or file is empty)."
                 if log_lines:
@@ -313,13 +306,12 @@ class SetupAssistWizard(models.TransientModel):
             else: # 'no_log_file' or 'error_reading'
                 self.log_display_content = "\n".join(log_lines) # This will contain the error message from analyzer
                 self.log_diagnostic_hints = "Review the error message above regarding log file access."
-
         except Exception as e:
             _logger.error("Error during log analysis action: %s", e, exc_info=True)
             self.log_display_content = f"An unexpected error occurred while analyzing logs: {str(e)}"
             self.log_diagnostic_hints = "Check Odoo server logs for more details."
             self.log_analysis_status = 'error_reading'
-            
+
     # --- Run All Scans (Not installations) ---
     def action_run_all_scans(self):
         self.ensure_one()
@@ -327,7 +319,6 @@ class SetupAssistWizard(models.TransientModel):
         self._format_dependency_results()
         self._format_db_check_results()
         self._format_odoo_conf_results()
-        
         try:
             addon_checker = addon_requirements_checker.AddonRequirementsChecker()
             analysis = addon_checker.analyze_dependencies()
@@ -342,51 +333,7 @@ class SetupAssistWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Error during 'Run All Scans' for addon dependencies: {e}", exc_info=True)
             self._update_addon_req_ui_fields(scan_summary_lines=[f"Error during addon dependency scan: {e}"], status='scanned_error')
-
         self.general_message = "All environment scans completed. Review individual tabs. Log analysis is a manual action on its respective tab."
-
-    # --- GitHub Integration Actions ---
-    def action_update_github_repos_and_restart(self):
-        """ Clones or pulls selected/active GitHub repositories and restarts Odoo. """
-        self.ensure_one()
-        repos_to_update = self.github_repo_ids if self.github_repo_ids else self.env['setup.assist.github.repo'].search([('active', '=', True)])
-
-        if not repos_to_update:
-            self.general_message = _("No GitHub repositories selected or marked as Active to update.")
-            return
-
-        self.general_message = _(f"Starting update process for {len(repos_to_update)} GitHub repository(s)...\n")
-        all_success = True
-        log_messages = []
-
-        for repo in repos_to_update:
-            log_messages.append(f"\n--- Updating Repository: {repo.name} ({repo.repo_url}@{repo.branch}) ---")
-            success, message = repo.action_clone_or_pull()
-            log_messages.append(f"Status: {repo.last_git_status}")
-            log_messages.append(f"Log:\n{repo.last_git_log}")
-            if not success:
-                all_success = False
-                log_messages.append(_("\n!!! Git operation failed. Skipping Odoo restart for now."))
-
-        self.general_message += "\n".join(log_messages)
-
-        if all_success:
-            self.general_message += _("\n\nAll selected/active repositories updated successfully. Proceeding to restart Odoo service...")
-            # Call the existing restart action
-            restart_result = self.action_restart_odoo_service()
-            # The action_restart_odoo_service already updates general_message,
-            # but we can append the git status for clarity.
-            # Re-fetching the record might be necessary if action_restart_odoo_service commits changes
-            self.env.cache.invalidate()
-            updated_self = self.browse(self.id) # Re-fetch
-            updated_self.general_message = self.general_message + "\n\n-- Odoo Restart Status --\n" + updated_self.general_message
-
-    def action_restart_odoo_service(self):
-        """Restart the Odoo service. Placeholder for actual restart logic."""
-        self.ensure_one()
-        # You can implement actual restart logic here, e.g., call a shell command or use a helper model
-        self.general_message = _("Odoo service restart requested (placeholder). If you want to implement actual restart logic, add it here.")
-        return None
 
     def _compute_system_info(self):
         for rec in self:

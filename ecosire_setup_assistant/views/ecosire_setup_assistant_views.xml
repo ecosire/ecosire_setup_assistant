@@ -5,7 +5,134 @@
             <field name="name">setup.assist.wizard.form</field>
             <field name="model">setup.assist.wizard</field>
             <field name="arch" type="xml">
+<<<<<<< HEAD:odoo_setup_assistant/views/odoo_setup_assistant_views.xml
+<<<<<<< HEAD
+                <form string="Odoo Setup Assistant" fullscreen="1" create="false" edit="false">
+                    <header>
+                        <button name="action_run_all_scans" string="Run All Scans" type="object" class="oe_highlight" icon="fa-play-circle"/>
+                        <button name="action_run_dependency_checks" string="Dependency Checks" type="object" icon="fa-cubes"/>
+                        <button name="action_run_db_checks" string="Database Checks" type="object" icon="fa-database"/>
+                        <button name="action_run_odoo_conf_checks" string="Analyze Odoo.conf" type="object" icon="fa-cogs"/>
+                        <button name="action_install_all_missing_dependencies"
+                                string="Install All Missing Dependencies"
+                                type="object"
+                                class="btn btn-primary ms-2"
+                                icon="fa-download"
+                                x-invisible="record.overall_dependency_status !== 'issues'"
+                                confirm="WARNING: This will attempt to install missing Python and system dependencies on the server. This may require admin rights and could affect your environment. Proceed with caution. Are you sure?"/>
+                        <button name="action_restart_odoo_service"
+                                string="Restart Odoo Service"
+                                type="object"
+                                class="btn btn-danger ms-2"
+                                icon="fa-refresh"
+                                groups="base.group_system"
+                                confirm="WARNING: This will immediately restart the Odoo server. Any unsaved work will be lost and all users will be disconnected. Are you sure you want to proceed?"/>
+                    </header>
+                    <sheet>
+                        <div class="o_container">
+                            <div class="o_row mb-3">
+                                <div class="o_col col-12">
+                                    <field name="general_message" nolabel="1" readonly="1" class="alert alert-info w-100"/>
+                                </div>
+                            </div>
+                        </div>
+                        <notebook>
+                            <page string="Dependencies" name="dependencies">
+                                <div class="o_container">
+                                    <div class="o_row">
+                                        <div class="o_col col-12 col-lg-6 mb-3">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-header bg-light">
+                                                    <strong>Python Libraries</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="python_dependencies_results" widget="text" nolabel="1" class="oe_mono_font w-100" style="min-height: 250px; white-space: pre-wrap;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="o_col col-12 col-lg-6 mb-3">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-header bg-light">
+                                                    <strong>System Executables</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="system_dependencies_results" widget="text" nolabel="1" class="oe_mono_font w-100" style="min-height: 250px; white-space: pre-wrap;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Database" name="database">
+                                <div class="o_container">
+                                    <div class="o_row mb-3">
+                                        <div class="o_col col-12 col-lg-8 mx-auto">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-header bg-light">
+                                                    <strong>Database Connection &amp; Configuration</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="db_status" widget="badge" decoration-success="db_status == 'ok'" decoration-danger="db_status == 'issues'" decoration-warning="db_status == 'warning'" class="mb-2"/>
+                                                    <field name="db_connection_results" widget="text" nolabel="1" class="oe_mono_font w-100" style="min-height: 200px; white-space: pre-wrap;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Odoo.conf" name="odoo_conf">
+                                <div class="o_container">
+                                    <div class="o_row mb-3">
+                                        <div class="o_col col-12 col-lg-8 mx-auto">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-header bg-light">
+                                                    <strong>Odoo Configuration File Analysis</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="odoo_conf_status" widget="badge" decoration-success="odoo_conf_status == 'ok'" decoration-danger="odoo_conf_status == 'issues'" decoration-warning="odoo_conf_status == 'warning'" class="mb-2"/>
+                                                    <field name="odoo_conf_results" widget="text" nolabel="1" class="oe_mono_font w-100" style="min-height: 200px; white-space: pre-wrap;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Log Analysis" name="log_analysis">
+                                <div class="o_container">
+                                    <div class="o_row mb-3">
+                                        <div class="o_col col-12 col-lg-10 mx-auto">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-header bg-light">
+                                                    <strong>Odoo Log File Analyzer</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    <field name="log_file_path_display" nolabel="1" readonly="1" class="mb-2"/>
+                                                    <div class="o_row mb-2">
+                                                        <div class="o_col col-4">
+                                                            <field name="log_lines_to_fetch"/>
+                                                        </div>
+                                                        <div class="o_col col-4">
+                                                            <field name="log_level_filter"/>
+                                                        </div>
+                                                        <div class="o_col col-4">
+                                                            <field name="log_keyword_filter" placeholder="e.g., 'CRON', 'HTTP', 'ERROR'"/>
+                                                        </div>
+                                                    </div>
+                                                    <button name="action_load_and_analyze_logs" string="Load &amp; Analyze Logs" type="object" class="btn btn-primary mb-2" icon="fa-file-text-o"/>
+                                                    <field name="log_display_content" widget="text" nolabel="1" class="oe_mono_font w-100" readonly="1" style="min-height: 200px; max-height: 400px; overflow-y: auto;"/>
+                                                    <field name="log_diagnostic_hints" widget="text" nolabel="1" class="oe_inline mt-2" readonly="1"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+=======
+                <form string="Odoo Setup Assistant" create="false" edit="false" delete="false" class="dashboard-style">
+=======
                 <form string="Ecosire Setup Assistant" create="false" edit="false" delete="false" class="dashboard-style">
+>>>>>>> 18.0:ecosire_setup_assistant/views/ecosire_setup_assistant_views.xml
                     <header>
                         <button name="action_run_all_scans" string="Run All Scans" type="object" class="btn btn-primary me-2" icon="fa-play-circle"/>
                         <button name="action_run_dependency_checks" string="Dependency Checks" type="object" class="btn btn-secondary me-2" icon="fa-cubes"/>
@@ -144,6 +271,7 @@
                                 </div>
                             </div>
                         </div>
+>>>>>>> 18.0
                     </sheet>
                     <footer>
                         <!-- No save/cancel buttons for dashboard style -->
@@ -156,7 +284,11 @@
             <field name="name">Ecosire Setup Assistant</field>
             <field name="res_model">setup.assist.wizard</field>
             <field name="view_mode">form</field>
+<<<<<<< HEAD
+            <field name="target">current</field>
+=======
             <field name="target">main</field>
+>>>>>>> 18.0
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Diagnose your Ecosire setup.

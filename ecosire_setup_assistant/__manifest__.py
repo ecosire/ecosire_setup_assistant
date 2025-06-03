@@ -22,11 +22,10 @@
     'application': True,
     'auto_install': False,
     'license': 'OPL-1',
-    'compatible_version': '18.0',
     'images': ['static/description/cover.png'],
     # It's good practice to note external Python dependencies if your module *itself*
     # directly depends on something not standard in Odoo's core requirements.
     # For the 'packaging' library used by addon_requirements_checker.py,
     # it's often present with pip/setuptools. If it were less common, you might note it here.
-    # 'external_dependencies': {'python': ['packaging']}, # Example
+    'external_dependencies': {'python': ['packaging']}, # Example
 }
