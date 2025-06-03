@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Odoo Setup Assistant',
+    'name': 'Ecosire Setup Assistant',
+    'module_name': 'ecosire_setup_assistant',
     'version': '3.0.2', # Incremented version for new features
     'summary': 'Diagnose Odoo setup, configuration, dependencies, and manage addon Python requirements.',
     'description': 'static/description/index.html',
@@ -12,7 +13,7 @@
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/github_repo_views.xml',
-        'views/odoo_setup_assistant_views.xml',
+        'views/ecosire_setup_assistant_views.xml',
         'views/res_config_settings_views.xml',
         'data/setup_assist_data.xml',
         # Add security CSV if specific groups beyond base.group_system are needed later

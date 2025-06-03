@@ -99,7 +99,7 @@
             id="menu_setup_assist_github_repo"
             name="GitHub Repositories"
             action="action_setup_assist_github_repo"
-            parent="menu_odoo_setup_assistant_root"
+            parent="menu_ecosire_setup_assistant_root"
             sequence="20"
             groups="base.group_system"/>
 
