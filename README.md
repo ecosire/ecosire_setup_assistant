@@ -1,8 +1,8 @@
-# 🛠️ Odoo Setup Assistant
+# 🛠️ ECOSIRE Setup Assistant
 
 [![Odoo Version](https://img.shields.io/badge/Odoo-15,16,17+-%237C7BAD)](https://www.odoo.com)
 [![License: OPL-1](https://img.shields.io/badge/License-OPL--1-blue.svg)](https://www.odoo.com/documentation/17.0/legal/licenses/licenses.html#odoo-proprietary-license-v1-0)
-The **Odoo Setup Assistant** is a comprehensive diagnostic and configuration toolkit designed to streamline the management and health-checking of your Odoo environments. Developed by Ecosire (PRIVATE) LIMITED, this module empowers developers, administrators, and consultants to ensure Odoo instances run smoothly and efficiently.
+The **ECOSIRE Setup Assistant** is a comprehensive diagnostic and configuration toolkit designed to streamline the management and health-checking of your Odoo environments. Developed by Ecosire (PRIVATE) LIMITED, this module empowers developers, administrators, and consultants to ensure Odoo instances run smoothly and efficiently.
 
 ## Overview
 
