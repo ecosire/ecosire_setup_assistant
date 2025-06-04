@@ -23,6 +23,7 @@
     'auto_install': False,
     'license': 'OPL-1',
     'images': ['static/description/cover.png'],
+    'odoo_version': '17.0',
     # It's good practice to note external Python dependencies if your module *itself*
     # directly depends on something not standard in Odoo's core requirements.
     # For the 'packaging' library used by addon_requirements_checker.py,
