@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_ecosire_setup_assistant_wizard_form" model="ir.ui.view">
-            <field name="name">setup.assist.wizard.form</field>
-            <field name="model">setup.assist.wizard</field>
+        <record id="view_odoo_automation_agent_wizard_form" model="ir.ui.view">
+            <field name="name">odoo.automation.agent.wizard.form</field>
+            <field name="model">odoo.automation.agent.wizard</field>
             <field name="arch" type="xml">
+<<<<<<< HEAD:ecosire_setup_assistant/views/ecosire_setup_assistant_views.xml
 <<<<<<< HEAD:odoo_setup_assistant/views/odoo_setup_assistant_views.xml
 <<<<<<< HEAD
                 <form string="Odoo Setup Assistant" fullscreen="1" create="false" edit="false">
@@ -133,6 +134,9 @@
 =======
                 <form string="Ecosire Setup Assistant" create="false" edit="false" delete="false" class="dashboard-style">
 >>>>>>> 18.0:ecosire_setup_assistant/views/ecosire_setup_assistant_views.xml
+=======
+                <form string="Odoo Automation Agent" create="false" edit="false" delete="false" class="dashboard-style">
+>>>>>>> fb35d79 (Updated Odoo Automation Agent):odoo_automation_agent/views/odoo_automation_agent_views.xml
                     <header>
                         <button name="action_run_all_scans" string="Run All Scans" type="object" class="btn btn-primary me-2" icon="fa-play-circle"/>
                         <button name="action_run_dependency_checks" string="Dependency Checks" type="object" class="btn btn-secondary me-2" icon="fa-cubes"/>
@@ -280,9 +284,9 @@
             </field>
         </record>
 
-        <record id="action_ecosire_setup_assistant_check" model="ir.actions.act_window">
-            <field name="name">Ecosire Setup Assistant</field>
-            <field name="res_model">setup.assist.wizard</field>
+        <record id="action_odoo_automation_agent_check" model="ir.actions.act_window">
+            <field name="name">Odoo Automation Agent</field>
+            <field name="res_model">odoo.automation.agent.wizard</field>
             <field name="view_mode">form</field>
 <<<<<<< HEAD
             <field name="target">current</field>
@@ -291,31 +295,31 @@
 >>>>>>> 18.0
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Diagnose your Ecosire setup.
+                    Diagnose your Odoo Automation Agent setup.
                 </p><p>
-                    This tool helps verify your Ecosire environment configuration,
+                    This tool helps verify your Odoo Automation Agent environment configuration,
                     check dependencies, analyze odoo.conf, manage Python requirements for addons, and view logs.
                 </p>
             </field>
         </record>
 
         <menuitem
-            id="menu_ecosire_setup_assistant_root"
-            name="Ecosire Setup Assistant" 
-            web_icon="ecosire_setup_assistant,static/description/icon.png"
+            id="menu_odoo_automation_agent_root"
+            name="Odoo Automation Agent" 
+            web_icon="odoo_automation_agent,static/description/icon.png"
             sequence="200" 
             groups="base.group_system"/>
 
         <menuitem
-            id="menu_ecosire_setup_assistant_run_diagnostics"
+            id="menu_odoo_automation_agent_run_diagnostics"
             name="Run Diagnostics"
-            parent="menu_ecosire_setup_assistant_root"
-            action="action_ecosire_setup_assistant_check"
+            parent="menu_odoo_automation_agent_root"
+            action="action_odoo_automation_agent_check"
             sequence="10"/>
 
-        <record id="view_ecosire_setup_assistant_system_info_form" model="ir.ui.view">
-            <field name="name">setup.assist.wizard.system.info.form</field>
-            <field name="model">setup.assist.wizard</field>
+        <record id="view_odoo_automation_agent_system_info_form" model="ir.ui.view">
+            <field name="name">odoo.automation.agent.wizard.system.info.form</field>
+            <field name="model">odoo.automation.agent.wizard</field>
             <field name="arch" type="xml">
                 <form string="System Information" create="false" edit="false" delete="false" class="dashboard-style">
                     <header>
@@ -369,19 +373,19 @@
             </field>
         </record>
 
-        <record id="action_ecosire_setup_assistant_system_info" model="ir.actions.act_window">
+        <record id="action_odoo_automation_agent_system_info" model="ir.actions.act_window">
             <field name="name">System Information</field>
-            <field name="res_model">setup.assist.wizard</field>
+            <field name="res_model">odoo.automation.agent.wizard</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_ecosire_setup_assistant_system_info_form"/>
+            <field name="view_id" ref="view_odoo_automation_agent_system_info_form"/>
             <field name="target">main</field>
         </record>
 
         <menuitem
-            id="menu_ecosire_setup_assistant_system_info"
+            id="menu_odoo_automation_agent_system_info"
             name="System Information"
-            parent="menu_ecosire_setup_assistant_root"
-            action="action_ecosire_setup_assistant_system_info"
+            parent="menu_odoo_automation_agent_root"
+            action="action_odoo_automation_agent_system_info"
             sequence="20"
             groups="base.group_system"/>
     </data>

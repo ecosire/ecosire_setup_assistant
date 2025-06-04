@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+<<<<<<< HEAD:ecosire_setup_assistant/views/res_config_settings_views.xml
         <record id="view_setup_assist_res_config_settings_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.setup.assist</field>
             <field name="model">res.config.settings</field>
@@ -21,5 +22,8 @@
                 </xpath>
             </field>
         </record>
+=======
+        <!-- Views for Odoo Automation Agent settings -->
+>>>>>>> fb35d79 (Updated Odoo Automation Agent):odoo_automation_agent/views/res_config_settings_views.xml
     </data>
 </odoo> 
