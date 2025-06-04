@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class SetupAssistGithubRepo(models.Model):
     _name = 'setup.assist.github.repo'
-    _description = 'Ecosire Setup Assistant Github Repository'
+    _description = 'Odoo Automation Agent Github Repository'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'sequence, name'
 

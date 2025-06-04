@@ -19,9 +19,9 @@ from ..checkers import addon_requirements_checker
 from ..checkers import log_analyzer # Import the new log analyzer
 
 
-class SetupAssistWizard(models.TransientModel):
-    _name = 'setup.assist.wizard'
-    _description = 'Ecosire Setup Assistant Wizard'
+class OdooAutomationAgentWizard(models.TransientModel):
+    _name = 'odoo.automation.agent.wizard'
+    _description = 'Odoo Automation Agent Wizard'
 
     # --- General ---
     general_message = fields.Text(string="Status Messages", readonly=True)
@@ -110,7 +110,7 @@ class SetupAssistWizard(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(SetupAssistWizard, self).default_get(fields_list)
+        res = super(OdooAutomationAgentWizard, self).default_get(fields_list)
         res.update({
             'general_message': "Click buttons to perform checks or analysis.",
             'python_dependencies_results': "Click 'Run Dependency Checks' or 'Run All Scans'.",

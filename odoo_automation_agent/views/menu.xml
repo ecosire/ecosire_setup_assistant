@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Root menu for Ecosire Setup Assistant -->
+        <!-- Root menu for Odoo Automation Agent -->
         <menuitem
-            id="menu_ecosire_setup_assistant_root"
-            name="Ecosire Setup Assistant"
+            id="menu_odoo_automation_agent_root"
+            name="Odoo Automation Agent"
             sequence="10"
             groups="base.group_system"/>
     </data>
